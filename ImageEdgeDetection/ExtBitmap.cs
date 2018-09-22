@@ -47,6 +47,7 @@ namespace ImageEdgeDetection
             return bitmapResult;
         }
 
+        // Applies a convolution filter (single matrix, factor and bias)
         private static Bitmap ConvolutionFilter(Bitmap sourceBitmap, 
                                              double[,] filterMatrix, 
                                                   double factor = 1, 
