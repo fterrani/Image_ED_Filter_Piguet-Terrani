@@ -45,13 +45,13 @@ namespace ImageEDFilter
                 previewBitmap = originalBitmap.CopyToSquareCanvas(picPreview.Width);
                 picPreview.Image = previewBitmap;
 
-                ApplyFilter(true);
+                ApplyEDFilter(true);
             }
         }
 
         private void btnSaveNewImage_Click(object sender, EventArgs e)
         {
-            ApplyFilter(false);
+            ApplyEDFilter(false);
 
             if (resultBitmap != null)
             {
@@ -84,7 +84,7 @@ namespace ImageEDFilter
             }
         }
 
-        private void ApplyFilter(bool preview)
+        private void ApplyEDFilter(bool preview)
         {
             if (previewBitmap == null || cmbEdgeDetection.SelectedIndex == -1)
             {
@@ -105,75 +105,81 @@ namespace ImageEDFilter
 
             if (selectedSource != null)
             {
-                if (cmbEdgeDetection.SelectedItem.ToString() == "None")
+                string selectedItem = cmbEdgeDetection.SelectedItem.ToString();
+
+                if (selectedItem == "None")
                 {
                     bitmapResult = selectedSource;
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 3x3")
+                else if (selectedItem == "Laplacian 3x3")
                 {
+                    // ATTENTION ! C#-specific syntax in all those else/if
                     bitmapResult = selectedSource.Laplacian3x3Filter(false);
+
+                    // Equivalent to the following:
+                    // bitmapResult = ExtBitmap.Laplacian3x3Filter(selectedSource, false);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 3x3 Grayscale")
+                else if (selectedItem == "Laplacian 3x3 Grayscale")
                 {
                     bitmapResult = selectedSource.Laplacian3x3Filter(true);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 5x5")
+                else if (selectedItem == "Laplacian 5x5")
                 {
                     bitmapResult = selectedSource.Laplacian5x5Filter(false);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 5x5 Grayscale")
+                else if (selectedItem == "Laplacian 5x5 Grayscale")
                 {
                     bitmapResult = selectedSource.Laplacian5x5Filter(true);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian of Gaussian")
+                else if (selectedItem == "Laplacian of Gaussian")
                 {
                     bitmapResult = selectedSource.LaplacianOfGaussianFilter();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 3x3 of Gaussian 3x3")
+                else if (selectedItem == "Laplacian 3x3 of Gaussian 3x3")
                 {
                     bitmapResult = selectedSource.Laplacian3x3OfGaussian3x3Filter();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 3x3 of Gaussian 5x5 - 1")
+                else if (selectedItem == "Laplacian 3x3 of Gaussian 5x5 - 1")
                 {
                     bitmapResult = selectedSource.Laplacian3x3OfGaussian5x5Filter1();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 3x3 of Gaussian 5x5 - 2")
+                else if (selectedItem == "Laplacian 3x3 of Gaussian 5x5 - 2")
                 {
                     bitmapResult = selectedSource.Laplacian3x3OfGaussian5x5Filter2();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 5x5 of Gaussian 3x3")
+                else if (selectedItem == "Laplacian 5x5 of Gaussian 3x3")
                 {
                     bitmapResult = selectedSource.Laplacian5x5OfGaussian3x3Filter();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 5x5 of Gaussian 5x5 - 1")
+                else if (selectedItem == "Laplacian 5x5 of Gaussian 5x5 - 1")
                 {
                     bitmapResult = selectedSource.Laplacian5x5OfGaussian5x5Filter1();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Laplacian 5x5 of Gaussian 5x5 - 2")
+                else if (selectedItem == "Laplacian 5x5 of Gaussian 5x5 - 2")
                 {
                     bitmapResult = selectedSource.Laplacian5x5OfGaussian5x5Filter2();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Sobel 3x3")
+                else if (selectedItem == "Sobel 3x3")
                 {
                     bitmapResult = selectedSource.Sobel3x3Filter(false);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Sobel 3x3 Grayscale")
+                else if (selectedItem == "Sobel 3x3 Grayscale")
                 {
                     bitmapResult = selectedSource.Sobel3x3Filter();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Prewitt")
+                else if (selectedItem == "Prewitt")
                 {
                     bitmapResult = selectedSource.PrewittFilter(false);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Prewitt Grayscale")
+                else if (selectedItem == "Prewitt Grayscale")
                 {
                     bitmapResult = selectedSource.PrewittFilter();
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Kirsch")
+                else if (selectedItem == "Kirsch")
                 {
                     bitmapResult = selectedSource.KirschFilter(false);
                 }
-                else if (cmbEdgeDetection.SelectedItem.ToString() == "Kirsch Grayscale")
+                else if (selectedItem == "Kirsch Grayscale")
                 {
                     bitmapResult = selectedSource.KirschFilter();
                 }
@@ -194,7 +200,7 @@ namespace ImageEDFilter
 
         private void NeighbourCountValueChangedEventHandler(object sender, EventArgs e)
         {
-            ApplyFilter(true);
+            ApplyEDFilter(true);
         }
     }
 }
