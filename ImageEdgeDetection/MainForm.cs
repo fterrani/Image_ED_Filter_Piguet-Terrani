@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Imaging;
 
-namespace ImageEdgeDetection
+namespace ImageEDFilter
 {
     public partial class MainForm : Form
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ImageEdgeDetection.Properties {
+namespace ImageEDFilter.Properties {
     using System;
     
     

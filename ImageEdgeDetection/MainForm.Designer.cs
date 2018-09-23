@@ -1,4 +1,4 @@
-﻿namespace ImageEdgeDetection
+﻿namespace ImageEDFilter
 {
     partial class MainForm
     {

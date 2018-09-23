@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace ImageEdgeDetection
+namespace ImageEDFilter
 {
     static class Program
     {
