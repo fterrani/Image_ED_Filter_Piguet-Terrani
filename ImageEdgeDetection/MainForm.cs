@@ -202,5 +202,10 @@ namespace ImageEDFilter
         {
             ApplyEDFilter(true);
         }
+
+        private void cmbColorFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // ApplyColorFilter(true);
+        }
     }
 }
