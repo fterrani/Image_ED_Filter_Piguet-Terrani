@@ -138,22 +138,17 @@ namespace ImageEDFilter
                     green = factor * green + bias;
                     red = factor * red + bias;
 
-                    if (blue > 255)
-                    { blue = 255; }
-                    else if (blue < 0)
-                    { blue = 0; }
+                    // Clamping blue, green and red between 0 and 255
+                    if (blue > 255) blue = 255;
+                    else if (blue < 0) blue = 0;
 
-                    if (green > 255)
-                    { green = 255; }
-                    else if (green < 0)
-                    { green = 0; }
+                    if (green > 255) green = 255;
+                    else if (green < 0) green = 0;
 
-                    if (red > 255)
-                    { red = 255; }
-                    else if (red < 0)
-                    { red = 0; }
+                    if (red > 255) red = 255;
+                    else if (red < 0) red = 0;
 
-                    resultBuffer[byteOffset] = (byte)(blue);
+                    resultBuffer[byteOffset + 0] = (byte)(blue);
                     resultBuffer[byteOffset + 1] = (byte)(green);
                     resultBuffer[byteOffset + 2] = (byte)(red);
                     resultBuffer[byteOffset + 3] = 255;
@@ -286,22 +281,17 @@ namespace ImageEDFilter
                     green = factor * green + bias;
                     red = factor * red + bias;
 
-                    if (blue > 255)
-                    { blue = 255; }
-                    else if (blue < 0)
-                    { blue = 0; }
+                    // Clamping blue, green and red between 0 and 255
+                    if (blue > 255) blue = 255;
+                    else if (blue < 0) blue = 0;
 
-                    if (green > 255)
-                    { green = 255; }
-                    else if (green < 0)
-                    { green = 0; }
+                    if (green > 255) green = 255;
+                    else if (green < 0) green = 0;
 
-                    if (red > 255)
-                    { red = 255; }
-                    else if (red < 0)
-                    { red = 0; }
+                    if (red > 255) red = 255;
+                    else if (red < 0) red = 0;
 
-                    resultBuffer[byteOffset] = (byte)(blue);
+                    resultBuffer[byteOffset + 0] = (byte)(blue);
                     resultBuffer[byteOffset + 1] = (byte)(green);
                     resultBuffer[byteOffset + 2] = (byte)(red);
                     resultBuffer[byteOffset + 3] = 255;
@@ -387,22 +377,18 @@ namespace ImageEDFilter
                     greenTotal = Math.Sqrt((greenX * greenX) + (greenY * greenY));
                     redTotal = Math.Sqrt((redX * redX) + (redY * redY));
 
-                    if (blueTotal > 255)
-                    { blueTotal = 255; }
-                    else if (blueTotal < 0)
-                    { blueTotal = 0; }
+                    // Clamping blue, green and red between 0 and 255
+                    if (blueTotal > 255) blueTotal = 255;
+                    else if (blueTotal < 0) blueTotal = 0;
 
-                    if (greenTotal > 255)
-                    { greenTotal = 255; }
-                    else if (greenTotal < 0)
-                    { greenTotal = 0; }
+                    if (greenTotal > 255) greenTotal = 255;
+                    else if (greenTotal < 0) greenTotal = 0;
 
-                    if (redTotal > 255)
-                    { redTotal = 255; }
-                    else if (redTotal < 0)
-                    { redTotal = 0; }
+                    if (redTotal > 255) redTotal = 255;
+                    else if (redTotal < 0) redTotal = 0;
 
-                    resultBuffer[byteOffset] = (byte)(blueTotal);
+
+                    resultBuffer[byteOffset + 0] = (byte)(blueTotal);
                     resultBuffer[byteOffset + 1] = (byte)(greenTotal);
                     resultBuffer[byteOffset + 2] = (byte)(redTotal);
                     resultBuffer[byteOffset + 3] = 255;
@@ -519,22 +505,17 @@ namespace ImageEDFilter
                     greenTotal = Math.Sqrt((greenX * greenX) + (greenY * greenY));
                     redTotal = Math.Sqrt((redX * redX) + (redY * redY));
 
-                    if (blueTotal > 255)
-                    { blueTotal = 255; }
-                    else if (blueTotal < 0)
-                    { blueTotal = 0; }
+                    // Clamping blue, green and red between 0 and 255
+                    if (blueTotal > 255) blueTotal = 255;
+                    else if (blueTotal < 0) blueTotal = 0;
 
-                    if (greenTotal > 255)
-                    { greenTotal = 255; }
-                    else if (greenTotal < 0)
-                    { greenTotal = 0; }
+                    if (greenTotal > 255) greenTotal = 255;
+                    else if (greenTotal < 0) greenTotal = 0;
 
-                    if (redTotal > 255)
-                    { redTotal = 255; }
-                    else if (redTotal < 0)
-                    { redTotal = 0; }
+                    if (redTotal > 255) redTotal = 255;
+                    else if (redTotal < 0) redTotal = 0;
 
-                    resultBuffer[byteOffset] = (byte)(blueTotal);
+                    resultBuffer[byteOffset + 0] = (byte)(blueTotal);
                     resultBuffer[byteOffset + 1] = (byte)(greenTotal);
                     resultBuffer[byteOffset + 2] = (byte)(redTotal);
                     resultBuffer[byteOffset + 3] = 255;
