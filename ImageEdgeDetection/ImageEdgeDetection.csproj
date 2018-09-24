@@ -46,9 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BmpFilterDecorator.cs" />
-    <Compile Include="EdgeDetectionFilters.cs" />
+    <Compile Include="BitmapFilter.cs" />
     <Compile Include="ExtBitmap.cs" />
+    <Compile Include="FilterChain.cs" />
     <Compile Include="IBitmapFilter.cs" />
     <Compile Include="ImageFilters.cs" />
     <Compile Include="MainForm.cs">
@@ -60,8 +60,6 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XYConvolutionFilter.cs" />
-    <Compile Include="SimpleConvolutionFilter.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

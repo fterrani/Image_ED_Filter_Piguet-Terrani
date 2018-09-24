@@ -83,8 +83,7 @@ namespace ImageEDFilter
                                                  PixelFormat.Format32bppArgb);
 
             byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
-            //byte[] resultBuffer = new byte[sourceData.Stride * sourceData.Height];
-
+            
             Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
             sourceBitmap.UnlockBits(sourceData);
 
@@ -106,7 +105,7 @@ namespace ImageEDFilter
                 }
             }
 
-            // We apply the provided matrix filter function
+            // We apply the provided convolution function
             byte[] resultBuffer = convolutionFunc( pixelBuffer, sourceBitmap.Width, sourceBitmap.Height, sourceData.Stride );
             
 

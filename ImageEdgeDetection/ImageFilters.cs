@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ImageEDFilter
 {
-    public static class ImageFilters
+    class ImageFilters
     {
         //Rainbow Filter
         public static Bitmap RainbowFilter(Bitmap bmp)

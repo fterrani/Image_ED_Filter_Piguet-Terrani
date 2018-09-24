@@ -26,9 +26,74 @@ namespace ImageEDFilter
         {
             InitializeComponent();
 
-            cmbEdgeDetection.SelectedIndex = 0;
+            // Populates the comboboxes with a set of IBitmapFilter objects
+            PrepareFilters();
+            
+            this.cmbColorFilter.SelectedIndex = 0;
+            this.cmbEdgeDetection.SelectedIndex = 0;
         }
 
+        private void PrepareFilters()
+        {
+            // Basic edge detection filters
+            IBitmapFilter laplacian3x3 = new BitmapFilter("Laplacian 3x3", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian3x3, 1.0, 0, false));
+            IBitmapFilter laplacian3x3Gray = new BitmapFilter("Laplacian 3x3 Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian3x3, 1.0, 0, true));
+            IBitmapFilter laplacian5x5 = new BitmapFilter("Laplacian 5x5", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian5x5, 1.0, 0, false));
+            IBitmapFilter laplacian5x5Gray = new BitmapFilter("Laplacian 5x5 Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian5x5, 1.0, 0, true));
+            IBitmapFilter laplacianOfGaussian = new BitmapFilter("Laplacian of Gaussian", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.LaplacianOfGaussian, 1.0, 0, true));
+            IBitmapFilter gaussian3x3 = new BitmapFilter("Gaussian 3x3", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Gaussian3x3, 1.0 / 16.0, 0, false));
+            IBitmapFilter gaussian5x5Type1 = new BitmapFilter("Gaussian 5x5 (Type 1)", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Gaussian5x5Type1, 1.0 / 159.0, 0, true));
+            IBitmapFilter gaussian5x5Type2 = new BitmapFilter("Gaussian 5x5 (Type 2)", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Gaussian5x5Type2, 1.0 / 256, 0, true));
+            IBitmapFilter sobel = new BitmapFilter("Sobel", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Sobel3x3Horizontal, Matrix.Sobel3x3Vertical, false));
+            IBitmapFilter sobelGray = new BitmapFilter("Sobel Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Sobel3x3Horizontal, Matrix.Sobel3x3Vertical, true));
+            IBitmapFilter prewitt = new BitmapFilter("Prewitt", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Prewitt3x3Horizontal, Matrix.Prewitt3x3Vertical, false));
+            IBitmapFilter prewittGray = new BitmapFilter("Prewitt Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Prewitt3x3Horizontal, Matrix.Prewitt3x3Vertical, true));
+            IBitmapFilter kirsch = new BitmapFilter("Kirsch", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Kirsch3x3Horizontal, Matrix.Kirsch3x3Vertical, false));
+            IBitmapFilter kirschGray = new BitmapFilter("Kirsch Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Kirsch3x3Horizontal, Matrix.Kirsch3x3Vertical, true));
+
+            // Edge detection filter combinations
+            FilterChain laplacian3x3OfGaussian3x3 = new FilterChain(gaussian3x3, laplacian3x3);
+            FilterChain laplacian3x3OfGaussian5x5Type1 = new FilterChain(gaussian5x5Type1, laplacian3x3);
+            FilterChain laplacian3x3OfGaussian5x5Type2 = new FilterChain(gaussian5x5Type2, laplacian3x3);
+            FilterChain laplacian5x5OfGaussian3x3 = new FilterChain(gaussian3x3, laplacian5x5);
+            FilterChain laplacian5x5OfGaussian5x5Type1 = new FilterChain(gaussian5x5Type1, laplacian5x5);
+            FilterChain laplacian5x5OfGaussian5x5Type2 = new FilterChain(gaussian5x5Type2, laplacian5x5);
+
+            // Basic pixel filters
+            IBitmapFilter rainbowFilter = new BitmapFilter("Rainbow filter", ImageFilters.RainbowFilter);
+            IBitmapFilter blackWhiteFilter = new BitmapFilter("Black and white", ImageFilters.BlackWhite);
+            IBitmapFilter swapFilter = new BitmapFilter("Swap filter", ImageFilters.ApplyFilterSwap);
+            IBitmapFilter magicMosaic = new BitmapFilter("Magic mosaic", ImageFilters.DivideCrop);
+            IBitmapFilter zenFilter = new BitmapFilter("Zen filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 10, 1, 1));
+            IBitmapFilter miamiFilter = new BitmapFilter("Miami filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 1));
+            IBitmapFilter hellFilter = new BitmapFilter("Hell filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 15));
+            IBitmapFilter nightFilter = new BitmapFilter("Night filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 1, 25));
+            IBitmapFilter megaGreenFilter = new BitmapFilter("Mega filter green", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Green));
+            IBitmapFilter megaOrangeFilter = new BitmapFilter("Mega filter orange", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Orange));
+            IBitmapFilter megaPinkFilter = new BitmapFilter("Mega filter pink", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Pink));
+            IBitmapFilter megaBlackFilter = new BitmapFilter("Mega filter custom", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Black));
+            IBitmapFilter crazySwapDivide = new BitmapFilter("Swap divide", bmp => ImageFilters.ApplyFilterSwapDivide(bmp, 1, 1, 2, 1));
+
+            // Pixel filter combinations
+            FilterChain crazyFilter = new FilterChain("Crazy filter", crazySwapDivide, swapFilter);
+
+
+            IBitmapFilter noopFilter = new BitmapFilter("[DO NOTHING]", bmp => new Bitmap(bmp));
+
+            this.cmbEdgeDetection.Items.AddRange(new IBitmapFilter[] {
+                noopFilter, laplacian3x3, laplacian3x3Gray, laplacian5x5, laplacian5x5Gray,
+                laplacianOfGaussian, laplacian3x3OfGaussian3x3, laplacian3x3OfGaussian5x5Type1, laplacian3x3OfGaussian5x5Type2,
+                laplacian5x5OfGaussian3x3, laplacian5x5OfGaussian5x5Type1, laplacian5x5OfGaussian5x5Type2, sobel, sobelGray,
+                prewitt, prewittGray, kirsch, kirschGray
+            });
+
+            this.cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
+                noopFilter, rainbowFilter, blackWhiteFilter, swapFilter, magicMosaic, zenFilter, miamiFilter, hellFilter, nightFilter, megaGreenFilter,
+                megaOrangeFilter, megaPinkFilter, megaBlackFilter, crazyFilter
+            });
+        }
+
+        // Shows an "Open..." window and displays the chosen file in the window
         private void btnOpenOriginal_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -45,13 +110,14 @@ namespace ImageEDFilter
                 previewBitmap = originalBitmap.CopyToSquareCanvas(picPreview.Width);
                 picPreview.Image = previewBitmap;
 
-                ApplyEDFilter(true);
+                ApplyFilters(true);
             }
         }
 
+        // Shows a "Save as..." window and saves the filtered image
         private void btnSaveNewImage_Click(object sender, EventArgs e)
         {
-            ApplyEDFilter(false);
+            ApplyFilters(false);
 
             if (resultBitmap != null)
             {
@@ -84,8 +150,9 @@ namespace ImageEDFilter
             }
         }
 
-        private void ApplyEDFilter(bool preview)
+        private void ApplyFilters(bool preview)
         {
+            // We don't do anything if we cannot find the preview bitmap or if no filter was selected
             if (previewBitmap == null || cmbEdgeDetection.SelectedIndex == -1)
             {
                 return;
@@ -94,105 +161,40 @@ namespace ImageEDFilter
             Bitmap selectedSource = null;
             Bitmap bitmapResult = null;
 
-            if (preview == true)
-            {
-                selectedSource = previewBitmap;
-            }
-            else
-            {
-                selectedSource = originalBitmap;
-            }
-
+            // The source is the preview bitmap if previewing
+            // It is the original bitmap if saving to a file
+            selectedSource = (preview ? previewBitmap : originalBitmap);
+            
+            // If the selected source is not null, we apply the filters
             if (selectedSource != null)
             {
-                string selectedItem = cmbEdgeDetection.SelectedItem.ToString();
+                IBitmapFilter selectedEDFilter = this.cmbEdgeDetection.SelectedItem as IBitmapFilter;
+                IBitmapFilter selectedColorFilter = this.cmbColorFilter.SelectedItem as IBitmapFilter;
 
-                if (selectedItem == "None")
-                {
-                    bitmapResult = selectedSource;
-                }
-                else if (selectedItem == "Laplacian 3x3")
-                {
-                    // ATTENTION ! C#-specific syntax in all those else/if
-                    bitmapResult = selectedSource.Laplacian3x3Filter(false);
+                bitmapResult = selectedSource;
 
-                    // Equivalent to the following:
-                    // bitmapResult = ExtBitmap.Laplacian3x3Filter(selectedSource, false);
-                }
-                else if (selectedItem == "Laplacian 3x3 Grayscale")
+                if (selectedEDFilter != null)
                 {
-                    bitmapResult = selectedSource.Laplacian3x3Filter(true);
+                    bitmapResult = selectedEDFilter.Apply(bitmapResult);
                 }
-                else if (selectedItem == "Laplacian 5x5")
+
+                if (selectedColorFilter != null)
                 {
-                    bitmapResult = selectedSource.Laplacian5x5Filter(false);
-                }
-                else if (selectedItem == "Laplacian 5x5 Grayscale")
-                {
-                    bitmapResult = selectedSource.Laplacian5x5Filter(true);
-                }
-                else if (selectedItem == "Laplacian of Gaussian")
-                {
-                    bitmapResult = selectedSource.LaplacianOfGaussianFilter();
-                }
-                else if (selectedItem == "Laplacian 3x3 of Gaussian 3x3")
-                {
-                    bitmapResult = selectedSource.Laplacian3x3OfGaussian3x3Filter();
-                }
-                else if (selectedItem == "Laplacian 3x3 of Gaussian 5x5 - 1")
-                {
-                    bitmapResult = selectedSource.Laplacian3x3OfGaussian5x5Filter1();
-                }
-                else if (selectedItem == "Laplacian 3x3 of Gaussian 5x5 - 2")
-                {
-                    bitmapResult = selectedSource.Laplacian3x3OfGaussian5x5Filter2();
-                }
-                else if (selectedItem == "Laplacian 5x5 of Gaussian 3x3")
-                {
-                    bitmapResult = selectedSource.Laplacian5x5OfGaussian3x3Filter();
-                }
-                else if (selectedItem == "Laplacian 5x5 of Gaussian 5x5 - 1")
-                {
-                    bitmapResult = selectedSource.Laplacian5x5OfGaussian5x5Filter1();
-                }
-                else if (selectedItem == "Laplacian 5x5 of Gaussian 5x5 - 2")
-                {
-                    bitmapResult = selectedSource.Laplacian5x5OfGaussian5x5Filter2();
-                }
-                else if (selectedItem == "Sobel 3x3")
-                {
-                    bitmapResult = selectedSource.Sobel3x3Filter(false);
-                }
-                else if (selectedItem == "Sobel 3x3 Grayscale")
-                {
-                    bitmapResult = selectedSource.Sobel3x3Filter();
-                }
-                else if (selectedItem == "Prewitt")
-                {
-                    bitmapResult = selectedSource.PrewittFilter(false);
-                }
-                else if (selectedItem == "Prewitt Grayscale")
-                {
-                    bitmapResult = selectedSource.PrewittFilter();
-                }
-                else if (selectedItem == "Kirsch")
-                {
-                    bitmapResult = selectedSource.KirschFilter(false);
-                }
-                else if (selectedItem == "Kirsch Grayscale")
-                {
-                    bitmapResult = selectedSource.KirschFilter();
+                    bitmapResult = selectedColorFilter.Apply(bitmapResult);
                 }
             }
 
+            // We check if we have a result
             if (bitmapResult != null)
             {
                 if (preview == true)
                 {
+                    // We display the result in the window (if previewing)
                     picPreview.Image = bitmapResult;
                 }
                 else
                 {
+                    // Or we store the result in resultBitmap (if saving to a file)
                     resultBitmap = bitmapResult;
                 }
             }
@@ -200,12 +202,12 @@ namespace ImageEDFilter
 
         private void NeighbourCountValueChangedEventHandler(object sender, EventArgs e)
         {
-            ApplyEDFilter(true);
+            ApplyFilters(true);
         }
 
         private void cmbColorFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // ApplyColorFilter(true);
+            ApplyFilters(true);
         }
     }
 }

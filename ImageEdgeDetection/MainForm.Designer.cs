@@ -79,46 +79,29 @@
             this.cmbEdgeDetection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbEdgeDetection.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbEdgeDetection.FormattingEnabled = true;
-            this.cmbEdgeDetection.Items.AddRange(new object[] {
-            "None",
-            "Laplacian 3x3",
-            "Laplacian 3x3 Grayscale",
-            "Laplacian 5x5",
-            "Laplacian 5x5 Grayscale",
-            "Laplacian of Gaussian",
-            "Laplacian 3x3 of Gaussian 3x3",
-            "Laplacian 3x3 of Gaussian 5x5 - 1",
-            "Laplacian 3x3 of Gaussian 5x5 - 2",
-            "Laplacian 5x5 of Gaussian 3x3",
-            "Laplacian 5x5 of Gaussian 5x5 - 1",
-            "Laplacian 5x5 of Gaussian 5x5 - 2",
-            "Sobel 3x3",
-            "Sobel 3x3 Grayscale",
-            "Prewitt",
-            "Prewitt Grayscale",
-            "Kirsch",
-            "Kirsch Grayscale"});
-            this.cmbEdgeDetection.Location = new System.Drawing.Point(340, 618);
+            this.cmbEdgeDetection.Location = new System.Drawing.Point(300, 680);
             this.cmbEdgeDetection.Name = "cmbEdgeDetection";
-            this.cmbEdgeDetection.Size = new System.Drawing.Size(288, 52);
+            this.cmbEdgeDetection.Size = new System.Drawing.Size(288, 37);
             this.cmbEdgeDetection.TabIndex = 20;
             this.cmbEdgeDetection.SelectedIndexChanged += new System.EventHandler(this.NeighbourCountValueChangedEventHandler);
             // 
             // labelEdge
             // 
             this.labelEdge.AutoSize = true;
-            this.labelEdge.Location = new System.Drawing.Point(225, 637);
+            this.labelEdge.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEdge.Location = new System.Drawing.Point(209, 690);
             this.labelEdge.Name = "labelEdge";
-            this.labelEdge.Size = new System.Drawing.Size(109, 25);
+            this.labelEdge.Size = new System.Drawing.Size(85, 20);
             this.labelEdge.TabIndex = 22;
             this.labelEdge.Text = "Edge filter";
             // 
             // labelColor
             // 
             this.labelColor.AutoSize = true;
-            this.labelColor.Location = new System.Drawing.Point(224, 688);
+            this.labelColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelColor.Location = new System.Drawing.Point(207, 638);
             this.labelColor.Name = "labelColor";
-            this.labelColor.Size = new System.Drawing.Size(110, 25);
+            this.labelColor.Size = new System.Drawing.Size(87, 20);
             this.labelColor.TabIndex = 23;
             this.labelColor.Text = "Color filter";
             // 
@@ -128,16 +111,9 @@
             this.cmbColorFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbColorFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbColorFilter.FormattingEnabled = true;
-            this.cmbColorFilter.Items.AddRange(new object[] {
-            "Sobel 3x3",
-            "Sobel 3x3 Grayscale",
-            "Prewitt",
-            "Prewitt Grayscale",
-            "Kirsch",
-            "Kirsch Grayscale"});
-            this.cmbColorFilter.Location = new System.Drawing.Point(340, 676);
+            this.cmbColorFilter.Location = new System.Drawing.Point(300, 628);
             this.cmbColorFilter.Name = "cmbColorFilter";
-            this.cmbColorFilter.Size = new System.Drawing.Size(288, 52);
+            this.cmbColorFilter.Size = new System.Drawing.Size(288, 37);
             this.cmbColorFilter.TabIndex = 24;
             this.cmbColorFilter.SelectedIndexChanged += new System.EventHandler(this.cmbColorFilter_SelectedIndexChanged);
             // 
