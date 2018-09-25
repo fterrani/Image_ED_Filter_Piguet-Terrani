@@ -22,38 +22,120 @@ namespace ImageEDFilter
         private Bitmap previewBitmap = null;
         private Bitmap resultBitmap = null;
 
-        private string msgNoImage = "No image chosen";
-        private string msgNoFilter = "No filter applied";
-        private string msgNoEDFilter = "No edge detection\nfilter applied";
-        private string msgOk = "Ready to save";
-
-        private bool ImageChosen()
+        private struct ProgramState
         {
-            return (originalBitmap != null);
+            public bool controlsEnabled;
+            public string msgText;
+            public string msgIconPath;
+            public Color msgColor;
+
+            public static Color COLOR_WARNING = Color.FromArgb(70, 40, 0);
+            public static Color COLOR_OK = Color.FromArgb(0, 190, 40);
+
+            public static string ICON_WARNING = ".\\warning-32x32.png";
+            public static string ICON_OK = ".\\ok-32x32.png";
         }
 
-        private bool NoFilterChosen()
+        private static ProgramState stateNoImage = new ProgramState()
         {
-            return (cmbColorFilter.SelectedIndex == 0 && cmbEdgeDetection.SelectedIndex == 0);
-        }
+            controlsEnabled = false,
+            msgText = "No image chosen",
+            msgIconPath = ProgramState.ICON_WARNING,
+            msgColor = ProgramState.COLOR_WARNING
+        };
 
-        private bool NoEdgeDetection()
+        private static ProgramState stateNoFilter = new ProgramState()
         {
-            return (cmbEdgeDetection.SelectedIndex == 0);
-        }
-        
+            controlsEnabled = true,
+            msgText = "No filter applied",
+            msgIconPath = ProgramState.ICON_WARNING,
+            msgColor = ProgramState.COLOR_WARNING
+        };
+
+        private static ProgramState stateNoED = new ProgramState()
+        {
+            controlsEnabled = true,
+            msgText = "No edge detection\nfilter applied",
+            msgIconPath = ProgramState.ICON_WARNING,
+            msgColor = ProgramState.COLOR_WARNING
+        };
+
+        private static ProgramState stateOk = new ProgramState()
+        {
+            controlsEnabled = true,
+            msgText = "Edge detection\napplied. Ready to save.",
+            msgIconPath = ProgramState.ICON_OK,
+            msgColor = ProgramState.COLOR_OK
+        };
+
+
         public MainForm()
         {
             InitializeComponent();
 
             // Populates the comboboxes with a set of IBitmapFilter objects
-            PrepareFilters();
+            PrepareFilterComboboxes();
             
-            this.cmbColorFilter.SelectedIndex = 0;
-            this.cmbEdgeDetection.SelectedIndex = 0;
+            // Updates the status message
+            UpdateMessage();
         }
 
-        private void PrepareFilters()
+        private void UpdateMessage()
+        {
+            bool noImage = (originalBitmap == null);
+            bool noFilterChosen = (cmbColorFilter.SelectedIndex == 0 && cmbEdgeDetection.SelectedIndex == 0);
+            bool noEdgeDetection = (cmbEdgeDetection.SelectedIndex == 0);
+
+            ProgramState state = new ProgramState()
+            {
+                controlsEnabled = true,
+                msgText = "",
+                msgIconPath = null,
+                msgColor = SystemColors.ControlText
+            };
+
+            if (noImage)
+            {
+                state = stateNoImage;
+            }
+
+            else if (noFilterChosen)
+            {
+                state = stateNoFilter;
+            }
+
+            else if (noEdgeDetection)
+            {
+                state = stateNoED;
+            }
+
+            else
+            {
+                state = stateOk;
+            }
+
+            ApplyState( state );
+        }
+
+        private void ApplyState(ProgramState state)
+        {
+            if (state.msgIconPath != null)
+            {
+                StreamReader streamReader = new StreamReader(state.msgIconPath);
+                picMessageIcon.Image = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
+            }
+            else
+                picMessageIcon.Image = null;
+
+            lbMessage.ForeColor = state.msgColor;
+            lbMessage.Text = state.msgText;
+
+            cmbColorFilter.Enabled = state.controlsEnabled;
+            cmbEdgeDetection.Enabled = state.controlsEnabled;
+            btnSaveNewImage.Enabled = state.controlsEnabled;
+        }
+
+        private void PrepareFilterComboboxes()
         {
             // Basic edge detection filters
             IBitmapFilter laplacian3x3 = new BitmapFilter("Laplacian 3x3", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian3x3, 1.0, 0, false));
@@ -100,21 +182,24 @@ namespace ImageEDFilter
             // Pixel filter combinations
             FilterChain crazyFilter = new FilterChain("Crazy filter", crazySwapDivide, swapFilter);
 
-
+            // Dummy filter
             IBitmapFilter noopFilter = new BitmapFilter("None", bmp => new Bitmap(bmp));
 
-            this.cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
+            cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
                 noopFilter, rainbowFilter, blackWhiteFilter, swapFilter, /*magicMosaic,*/
                 zenFilter, miamiFilter, hellFilter, nightFilter, megaGreenFilter,
                 megaOrangeFilter, megaPinkFilter, megaBlackFilter, crazyFilter
             });
 
-            this.cmbEdgeDetection.Items.AddRange(new IBitmapFilter[] {
+            cmbEdgeDetection.Items.AddRange(new IBitmapFilter[] {
                 noopFilter, laplacian3x3, laplacian3x3Gray, laplacian5x5, laplacian5x5Gray,
                 laplacianOfGaussian, laplacian3x3OfGaussian3x3, laplacian3x3OfGaussian5x5Type1,
                 laplacian3x3OfGaussian5x5Type2, laplacian5x5OfGaussian3x3, laplacian5x5OfGaussian5x5Type1,
                 laplacian5x5OfGaussian5x5Type2, sobel, sobelGray, prewitt, prewittGray, kirsch, kirschGray
             });
+
+            cmbColorFilter.SelectedIndex = 0;
+            cmbEdgeDetection.SelectedIndex = 0;
         }
 
         // Shows an "Open..." window and displays the chosen file in the window
@@ -123,8 +208,9 @@ namespace ImageEDFilter
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select an image file.";
 
-            ofd.Filter = "Png Images(*.png)|*.png";
-            ofd.Filter += "|Jpeg Images(*.jpg)|*.jpg";
+            ofd.Filter = "All image files|*.png;*.jpg;*.bmp";
+            ofd.Filter += "|PNG Images(*.png)|*.png";
+            ofd.Filter += "|JPEG Images(*.jpg)|*.jpg";
             ofd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -138,6 +224,8 @@ namespace ImageEDFilter
 
                 ApplyFilters(true);
             }
+
+            UpdateMessage();
         }
 
         // Shows a "Save as..." window and saves the filtered image
@@ -149,7 +237,8 @@ namespace ImageEDFilter
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Title = "Specify a file name and file path";
-                sfd.Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg";
+                sfd.Filter = "PNG Images(*.png)|*.png";
+                sfd.Filter += "|JPEG Images(*.jpg)|*.jpg";
                 sfd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
 
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -174,6 +263,8 @@ namespace ImageEDFilter
                     resultBitmap = null;
                 }
             }
+
+            UpdateMessage();
         }
 
         private void ApplyFilters(bool preview)
@@ -194,8 +285,8 @@ namespace ImageEDFilter
             // If the selected source is not null, we apply the filters
             if (selectedSource != null)
             {
-                IBitmapFilter selectedEDFilter = this.cmbEdgeDetection.SelectedItem as IBitmapFilter;
-                IBitmapFilter selectedColorFilter = this.cmbColorFilter.SelectedItem as IBitmapFilter;
+                IBitmapFilter selectedEDFilter = cmbEdgeDetection.SelectedItem as IBitmapFilter;
+                IBitmapFilter selectedColorFilter = cmbColorFilter.SelectedItem as IBitmapFilter;
 
                 bitmapResult = selectedSource;
 
@@ -224,6 +315,8 @@ namespace ImageEDFilter
                     resultBitmap = bitmapResult;
                 }
             }
+
+            UpdateMessage();
         }
 
         private void NeighbourCountValueChangedEventHandler(object sender, EventArgs e)

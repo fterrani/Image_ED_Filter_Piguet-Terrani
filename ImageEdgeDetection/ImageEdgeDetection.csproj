@@ -84,8 +84,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ok-32x32.png" />
-    <Content Include="warning-32x32.png" />
+    <Content Include="ok-32x32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="warning-32x32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

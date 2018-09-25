@@ -35,21 +35,22 @@
             this.labelEdge = new System.Windows.Forms.Label();
             this.labelColor = new System.Windows.Forms.Label();
             this.cmbColorFilter = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lbMessage = new System.Windows.Forms.Label();
+            this.picMessageIcon = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMessageIcon)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // picPreview
             // 
-            this.picPreview.BackColor = System.Drawing.Color.Silver;
+            this.picPreview.BackColor = System.Drawing.Color.Transparent;
             this.picPreview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.picPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picPreview.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.picPreview.Location = new System.Drawing.Point(12, 12);
+            this.picPreview.Location = new System.Drawing.Point(36, 35);
             this.picPreview.Name = "picPreview";
-            this.picPreview.Size = new System.Drawing.Size(772, 600);
+            this.picPreview.Size = new System.Drawing.Size(697, 525);
             this.picPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picPreview.TabIndex = 13;
             this.picPreview.TabStop = false;
@@ -68,9 +69,9 @@
             // btnSaveNewImage
             // 
             this.btnSaveNewImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveNewImage.Location = new System.Drawing.Point(620, 626);
+            this.btnSaveNewImage.Location = new System.Drawing.Point(599, 684);
             this.btnSaveNewImage.Name = "btnSaveNewImage";
-            this.btnSaveNewImage.Size = new System.Drawing.Size(164, 47);
+            this.btnSaveNewImage.Size = new System.Drawing.Size(185, 37);
             this.btnSaveNewImage.TabIndex = 16;
             this.btnSaveNewImage.Text = "Save";
             this.btnSaveNewImage.UseVisualStyleBackColor = true;
@@ -82,7 +83,7 @@
             this.cmbEdgeDetection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbEdgeDetection.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbEdgeDetection.FormattingEnabled = true;
-            this.cmbEdgeDetection.Location = new System.Drawing.Point(305, 679);
+            this.cmbEdgeDetection.Location = new System.Drawing.Point(288, 684);
             this.cmbEdgeDetection.Name = "cmbEdgeDetection";
             this.cmbEdgeDetection.Size = new System.Drawing.Size(282, 37);
             this.cmbEdgeDetection.TabIndex = 20;
@@ -92,7 +93,7 @@
             // 
             this.labelEdge.AutoSize = true;
             this.labelEdge.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEdge.Location = new System.Drawing.Point(201, 685);
+            this.labelEdge.Location = new System.Drawing.Point(186, 690);
             this.labelEdge.Name = "labelEdge";
             this.labelEdge.Size = new System.Drawing.Size(98, 25);
             this.labelEdge.TabIndex = 22;
@@ -102,7 +103,7 @@
             // 
             this.labelColor.AutoSize = true;
             this.labelColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelColor.Location = new System.Drawing.Point(200, 632);
+            this.labelColor.Location = new System.Drawing.Point(185, 643);
             this.labelColor.Name = "labelColor";
             this.labelColor.Size = new System.Drawing.Size(99, 25);
             this.labelColor.TabIndex = 23;
@@ -114,43 +115,54 @@
             this.cmbColorFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbColorFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbColorFilter.FormattingEnabled = true;
-            this.cmbColorFilter.Location = new System.Drawing.Point(305, 626);
+            this.cmbColorFilter.Location = new System.Drawing.Point(288, 637);
             this.cmbColorFilter.Name = "cmbColorFilter";
             this.cmbColorFilter.Size = new System.Drawing.Size(282, 37);
             this.cmbColorFilter.TabIndex = 24;
             this.cmbColorFilter.SelectedIndexChanged += new System.EventHandler(this.cmbColorFilter_SelectedIndexChanged);
             // 
-            // label1
+            // lbMessage
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(660, 682);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(124, 34);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "No edge detection\r\nfilter applied";
+            this.lbMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbMessage.Location = new System.Drawing.Point(637, 626);
+            this.lbMessage.Name = "lbMessage";
+            this.lbMessage.Size = new System.Drawing.Size(147, 48);
+            this.lbMessage.TabIndex = 25;
+            this.lbMessage.Text = "Status text";
+            this.lbMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // pictureBox1
+            // picMessageIcon
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(620, 685);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.TabIndex = 26;
-            this.pictureBox1.TabStop = false;
+            this.picMessageIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.picMessageIcon.Location = new System.Drawing.Point(600, 635);
+            this.picMessageIcon.Name = "picMessageIcon";
+            this.picMessageIcon.Size = new System.Drawing.Size(32, 32);
+            this.picMessageIcon.TabIndex = 26;
+            this.picMessageIcon.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.panel1.Controls.Add(this.picPreview);
+            this.panel1.Location = new System.Drawing.Point(12, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(772, 599);
+            this.panel1.TabIndex = 27;
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(796, 733);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.picMessageIcon);
+            this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.cmbColorFilter);
             this.Controls.Add(this.labelColor);
             this.Controls.Add(this.labelEdge);
             this.Controls.Add(this.cmbEdgeDetection);
             this.Controls.Add(this.btnSaveNewImage);
             this.Controls.Add(this.btnOpenOriginal);
-            this.Controls.Add(this.picPreview);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -158,7 +170,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Image Edge Detection";
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMessageIcon)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -173,8 +186,9 @@
         private System.Windows.Forms.Label labelEdge;
         private System.Windows.Forms.Label labelColor;
         private System.Windows.Forms.ComboBox cmbColorFilter;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lbMessage;
+        private System.Windows.Forms.PictureBox picMessageIcon;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
