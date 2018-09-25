@@ -155,6 +155,7 @@ namespace ImageEDFilter
             return temp;
         }
 
+        // BUGGED FILTER! (works only on square images)
         //apply magic mosaic
         public static Bitmap DivideCrop(Bitmap bmp)
         {

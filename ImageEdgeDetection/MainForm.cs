@@ -21,6 +21,26 @@ namespace ImageEDFilter
         private Bitmap originalBitmap = null;
         private Bitmap previewBitmap = null;
         private Bitmap resultBitmap = null;
+
+        private string msgNoImage = "No image chosen";
+        private string msgNoFilter = "No filter applied";
+        private string msgNoEDFilter = "No edge detection\nfilter applied";
+        private string msgOk = "Ready to save";
+
+        private bool ImageChosen()
+        {
+            return (originalBitmap != null);
+        }
+
+        private bool NoFilterChosen()
+        {
+            return (cmbColorFilter.SelectedIndex == 0 && cmbEdgeDetection.SelectedIndex == 0);
+        }
+
+        private bool NoEdgeDetection()
+        {
+            return (cmbEdgeDetection.SelectedIndex == 0);
+        }
         
         public MainForm()
         {
@@ -63,7 +83,10 @@ namespace ImageEDFilter
             IBitmapFilter rainbowFilter = new BitmapFilter("Rainbow filter", ImageFilters.RainbowFilter);
             IBitmapFilter blackWhiteFilter = new BitmapFilter("Black and white", ImageFilters.BlackWhite);
             IBitmapFilter swapFilter = new BitmapFilter("Swap filter", ImageFilters.ApplyFilterSwap);
-            IBitmapFilter magicMosaic = new BitmapFilter("Magic mosaic", ImageFilters.DivideCrop);
+
+            // BUGGED filter! (works only on square images)
+            //IBitmapFilter magicMosaic = new BitmapFilter("Magic mosaic", ImageFilters.DivideCrop);
+
             IBitmapFilter zenFilter = new BitmapFilter("Zen filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 10, 1, 1));
             IBitmapFilter miamiFilter = new BitmapFilter("Miami filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 1));
             IBitmapFilter hellFilter = new BitmapFilter("Hell filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 15));
@@ -78,18 +101,19 @@ namespace ImageEDFilter
             FilterChain crazyFilter = new FilterChain("Crazy filter", crazySwapDivide, swapFilter);
 
 
-            IBitmapFilter noopFilter = new BitmapFilter("[DO NOTHING]", bmp => new Bitmap(bmp));
+            IBitmapFilter noopFilter = new BitmapFilter("None", bmp => new Bitmap(bmp));
+
+            this.cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
+                noopFilter, rainbowFilter, blackWhiteFilter, swapFilter, /*magicMosaic,*/
+                zenFilter, miamiFilter, hellFilter, nightFilter, megaGreenFilter,
+                megaOrangeFilter, megaPinkFilter, megaBlackFilter, crazyFilter
+            });
 
             this.cmbEdgeDetection.Items.AddRange(new IBitmapFilter[] {
                 noopFilter, laplacian3x3, laplacian3x3Gray, laplacian5x5, laplacian5x5Gray,
-                laplacianOfGaussian, laplacian3x3OfGaussian3x3, laplacian3x3OfGaussian5x5Type1, laplacian3x3OfGaussian5x5Type2,
-                laplacian5x5OfGaussian3x3, laplacian5x5OfGaussian5x5Type1, laplacian5x5OfGaussian5x5Type2, sobel, sobelGray,
-                prewitt, prewittGray, kirsch, kirschGray
-            });
-
-            this.cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
-                noopFilter, rainbowFilter, blackWhiteFilter, swapFilter, magicMosaic, zenFilter, miamiFilter, hellFilter, nightFilter, megaGreenFilter,
-                megaOrangeFilter, megaPinkFilter, megaBlackFilter, crazyFilter
+                laplacianOfGaussian, laplacian3x3OfGaussian3x3, laplacian3x3OfGaussian5x5Type1,
+                laplacian3x3OfGaussian5x5Type2, laplacian5x5OfGaussian3x3, laplacian5x5OfGaussian5x5Type1,
+                laplacian5x5OfGaussian5x5Type2, sobel, sobelGray, prewitt, prewittGray, kirsch, kirschGray
             });
         }
 
@@ -98,7 +122,9 @@ namespace ImageEDFilter
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Title = "Select an image file.";
-            ofd.Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg";
+
+            ofd.Filter = "Png Images(*.png)|*.png";
+            ofd.Filter += "|Jpeg Images(*.jpg)|*.jpg";
             ofd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
