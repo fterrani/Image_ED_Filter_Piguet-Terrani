@@ -143,8 +143,7 @@ namespace ImageEDFilter
 
             int byteOffset = 0;
 
-            for (int offsetY = filterOffset; offsetY <
-                height - filterOffset; offsetY++)
+            for (int offsetY = filterOffset; offsetY < height - filterOffset; offsetY++)
             {
                 for (int offsetX = filterOffset; offsetX <
                     width - filterOffset; offsetX++)
@@ -157,28 +156,18 @@ namespace ImageEDFilter
                                  stride +
                                  offsetX * 4;
 
-                    for (int filterY = -filterOffset;
-                        filterY <= filterOffset; filterY++)
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
                     {
-                        for (int filterX = -filterOffset;
-                            filterX <= filterOffset; filterX++)
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
                         {
 
                             calcOffset = byteOffset +
                                          (filterX * 4) +
                                          (filterY * stride);
 
-                            blue += (double)(pixelBuffer[calcOffset]) *
-                                    filterMatrix[filterY + filterOffset,
-                                                        filterX + filterOffset];
-
-                            green += (double)(pixelBuffer[calcOffset + 1]) *
-                                     filterMatrix[filterY + filterOffset,
-                                                        filterX + filterOffset];
-
-                            red += (double)(pixelBuffer[calcOffset + 2]) *
-                                   filterMatrix[filterY + filterOffset,
-                                                      filterX + filterOffset];
+                            blue +=  (double)(pixelBuffer[calcOffset])     * filterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            green += (double)(pixelBuffer[calcOffset + 1]) * filterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            red +=   (double)(pixelBuffer[calcOffset + 2]) * filterMatrix[filterY + filterOffset, filterX + filterOffset];
                         }
                     }
 
@@ -228,11 +217,9 @@ namespace ImageEDFilter
 
             int byteOffset = 0;
 
-            for (int offsetY = filterOffset; offsetY <
-                height - filterOffset; offsetY++)
+            for (int offsetY = filterOffset; offsetY < height - filterOffset; offsetY++)
             {
-                for (int offsetX = filterOffset; offsetX <
-                    width - filterOffset; offsetX++)
+                for (int offsetX = filterOffset; offsetX < width - filterOffset; offsetX++)
                 {
                     blueX = greenX = redX = 0;
                     blueY = greenY = redY = 0;
@@ -243,39 +230,21 @@ namespace ImageEDFilter
                                  stride +
                                  offsetX * 4;
 
-                    for (int filterY = -filterOffset;
-                        filterY <= filterOffset; filterY++)
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
                     {
-                        for (int filterX = -filterOffset;
-                            filterX <= filterOffset; filterX++)
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
                         {
                             calcOffset = byteOffset +
                                          (filterX * 4) +
                                          (filterY * stride);
 
-                            blueX += (double)(pixelBuffer[calcOffset]) *
-                                      xFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
+                            blueX +=  (double)(pixelBuffer[calcOffset])     * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            greenX += (double)(pixelBuffer[calcOffset + 1]) * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            redX +=   (double)(pixelBuffer[calcOffset + 2]) * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
 
-                            greenX += (double)(pixelBuffer[calcOffset + 1]) *
-                                      xFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
-
-                            redX += (double)(pixelBuffer[calcOffset + 2]) *
-                                      xFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
-
-                            blueY += (double)(pixelBuffer[calcOffset]) *
-                                      yFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
-
-                            greenY += (double)(pixelBuffer[calcOffset + 1]) *
-                                      yFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
-
-                            redY += (double)(pixelBuffer[calcOffset + 2]) *
-                                      yFilterMatrix[filterY + filterOffset,
-                                              filterX + filterOffset];
+                            blueY +=  (double)(pixelBuffer[calcOffset])     * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            greenY += (double)(pixelBuffer[calcOffset + 1]) * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            redY +=   (double)(pixelBuffer[calcOffset + 2]) * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
                         }
                     }
 
