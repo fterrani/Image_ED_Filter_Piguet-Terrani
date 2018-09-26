@@ -18,10 +18,11 @@ namespace ImageEDFilter
 {
     public partial class MainForm : Form
     {
-        private Bitmap originalBitmap = null;
-        private Bitmap previewBitmap = null;
-        private Bitmap resultBitmap = null;
+        private Bitmap originalBitmap = null; // Original image (original size)
+        private Bitmap previewBitmap = null; // Original image (Preview size)
+        private Bitmap resultBitmap = null; // Filtered image (original OR preview size)
 
+        // This state struct defines if controles are enabled/disabled and the status message text, icon and color.
         private struct ProgramState
         {
             public bool controlsEnabled;
@@ -29,13 +30,16 @@ namespace ImageEDFilter
             public string msgIconPath;
             public Color msgColor;
 
+            // Text colors for warning and success
             public static Color COLOR_WARNING = Color.FromArgb(70, 40, 0);
             public static Color COLOR_OK = Color.FromArgb(0, 190, 40);
 
+            // Icon paths for warning and success
             public static string ICON_WARNING = ".\\warning-32x32.png";
             public static string ICON_OK = ".\\ok-32x32.png";
         }
 
+        // No image state - Warns the user that image is selected yet (default state when program starts)
         private static ProgramState stateNoImage = new ProgramState()
         {
             controlsEnabled = false,
@@ -44,6 +48,7 @@ namespace ImageEDFilter
             msgColor = ProgramState.COLOR_WARNING
         };
 
+        // No filter state - Warns the user that no filter is applied on the image
         private static ProgramState stateNoFilter = new ProgramState()
         {
             controlsEnabled = true,
@@ -52,6 +57,7 @@ namespace ImageEDFilter
             msgColor = ProgramState.COLOR_WARNING
         };
 
+        // No ED state - Warns the user that no edge detection filter is applied on the image
         private static ProgramState stateNoED = new ProgramState()
         {
             controlsEnabled = true,
@@ -60,6 +66,7 @@ namespace ImageEDFilter
             msgColor = ProgramState.COLOR_WARNING
         };
 
+        // Informs the user that an edge detection filter was successfully applied on the chosen image
         private static ProgramState stateOk = new ProgramState()
         {
             controlsEnabled = true,
@@ -71,21 +78,24 @@ namespace ImageEDFilter
 
         public MainForm()
         {
+            // Initializes controls edited with the WinForm designer
             InitializeComponent();
 
             // Populates the comboboxes with a set of IBitmapFilter objects
             PrepareFilterComboboxes();
             
-            // Updates the status message
-            UpdateMessage();
+            // Checks the program's state
+            CheckProgramState();
         }
 
-        private void UpdateMessage()
+        // Checks in which state the program is and applies it
+        private void CheckProgramState()
         {
             bool noImage = (originalBitmap == null);
             bool noFilterChosen = (cmbColorFilter.SelectedIndex == 0 && cmbEdgeDetection.SelectedIndex == 0);
             bool noEdgeDetection = (cmbEdgeDetection.SelectedIndex == 0);
 
+            // This state does nothing in particular
             ProgramState state = new ProgramState()
             {
                 controlsEnabled = true,
@@ -94,49 +104,83 @@ namespace ImageEDFilter
                 msgColor = SystemColors.ControlText
             };
 
+            // No image was chosen
             if (noImage)
             {
                 state = stateNoImage;
             }
 
+            // No filter is applied on the image
             else if (noFilterChosen)
             {
                 state = stateNoFilter;
             }
 
+            // At least one filter is applied, but no ED filter is applied
             else if (noEdgeDetection)
             {
                 state = stateNoED;
             }
 
+            // An edge detection was applied on the image
             else
             {
                 state = stateOk;
             }
 
+            // Applies 
             ApplyState( state );
         }
 
+        // Applies the provided state on the program's GUI
         private void ApplyState(ProgramState state)
         {
             if (state.msgIconPath != null)
             {
+                // Displaying the icon
                 StreamReader streamReader = new StreamReader(state.msgIconPath);
                 picMessageIcon.Image = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
             }
             else
                 picMessageIcon.Image = null;
 
+            // Setting the message content and text color
             lbMessage.ForeColor = state.msgColor;
             lbMessage.Text = state.msgText;
 
+            // Enabling/disabling controls
             cmbColorFilter.Enabled = state.controlsEnabled;
             cmbEdgeDetection.Enabled = state.controlsEnabled;
             btnSaveNewImage.Enabled = state.controlsEnabled;
         }
 
+        // Populates filter comboboxes with color and ED filters
         private void PrepareFilterComboboxes()
         {
+            // Dummy filter (does nothing)
+            IBitmapFilter noopFilter = new BitmapFilter("None", bmp => new Bitmap(bmp));
+
+            // Basic pixel filters
+            IBitmapFilter rainbowFilter = new BitmapFilter("Rainbow filter", ImageFilters.RainbowFilter);
+            IBitmapFilter blackWhiteFilter = new BitmapFilter("Black and white", ImageFilters.BlackWhite);
+            IBitmapFilter swapFilter = new BitmapFilter("Swap filter", ImageFilters.ApplyFilterSwap);
+            IBitmapFilter zenFilter = new BitmapFilter("Zen filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 10, 1, 1));
+            IBitmapFilter miamiFilter = new BitmapFilter("Miami filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 1));
+            IBitmapFilter hellFilter = new BitmapFilter("Hell filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 15));
+            IBitmapFilter nightFilter = new BitmapFilter("Night filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 1, 25));
+            IBitmapFilter megaGreenFilter = new BitmapFilter("Mega filter green", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Green));
+            IBitmapFilter megaOrangeFilter = new BitmapFilter("Mega filter orange", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Orange));
+            IBitmapFilter megaPinkFilter = new BitmapFilter("Mega filter pink", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Pink));
+            IBitmapFilter megaBlackFilter = new BitmapFilter("Mega filter custom", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Black));
+            IBitmapFilter crazySwapDivide = new BitmapFilter("Swap divide", bmp => ImageFilters.ApplyFilterSwapDivide(bmp, 1, 1, 2, 1));
+            // BUGGED filter! (works only on square images)
+            //IBitmapFilter magicMosaic = new BitmapFilter("Magic mosaic", ImageFilters.DivideCrop);
+
+            // Pixel filter combinations
+            FilterChain crazyFilter = new FilterChain("Crazy filter", crazySwapDivide, swapFilter);
+
+
+
             // Basic edge detection filters
             IBitmapFilter laplacian3x3 = new BitmapFilter("Laplacian 3x3", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian3x3, 1.0, 0, false));
             IBitmapFilter laplacian3x3Gray = new BitmapFilter("Laplacian 3x3 Grayscale", bmp => ExtBitmap.ConvolutionFilter(bmp, Matrix.Laplacian3x3, 1.0, 0, true));
@@ -161,36 +205,16 @@ namespace ImageEDFilter
             FilterChain laplacian5x5OfGaussian5x5Type1 = new FilterChain(gaussian5x5Type1, laplacian5x5);
             FilterChain laplacian5x5OfGaussian5x5Type2 = new FilterChain(gaussian5x5Type2, laplacian5x5);
 
-            // Basic pixel filters
-            IBitmapFilter rainbowFilter = new BitmapFilter("Rainbow filter", ImageFilters.RainbowFilter);
-            IBitmapFilter blackWhiteFilter = new BitmapFilter("Black and white", ImageFilters.BlackWhite);
-            IBitmapFilter swapFilter = new BitmapFilter("Swap filter", ImageFilters.ApplyFilterSwap);
+            
 
-            // BUGGED filter! (works only on square images)
-            //IBitmapFilter magicMosaic = new BitmapFilter("Magic mosaic", ImageFilters.DivideCrop);
-
-            IBitmapFilter zenFilter = new BitmapFilter("Zen filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 10, 1, 1));
-            IBitmapFilter miamiFilter = new BitmapFilter("Miami filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 1));
-            IBitmapFilter hellFilter = new BitmapFilter("Hell filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 10, 15));
-            IBitmapFilter nightFilter = new BitmapFilter("Night filter", bmp => ImageFilters.ApplyFilter(bmp, 1, 1, 1, 25));
-            IBitmapFilter megaGreenFilter = new BitmapFilter("Mega filter green", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Green));
-            IBitmapFilter megaOrangeFilter = new BitmapFilter("Mega filter orange", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Orange));
-            IBitmapFilter megaPinkFilter = new BitmapFilter("Mega filter pink", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Pink));
-            IBitmapFilter megaBlackFilter = new BitmapFilter("Mega filter custom", bmp => ImageFilters.ApplyFilterMega(bmp, 230, 110, Color.Black));
-            IBitmapFilter crazySwapDivide = new BitmapFilter("Swap divide", bmp => ImageFilters.ApplyFilterSwapDivide(bmp, 1, 1, 2, 1));
-
-            // Pixel filter combinations
-            FilterChain crazyFilter = new FilterChain("Crazy filter", crazySwapDivide, swapFilter);
-
-            // Dummy filter
-            IBitmapFilter noopFilter = new BitmapFilter("None", bmp => new Bitmap(bmp));
-
+            // Color filter combobox
             cmbColorFilter.Items.AddRange(new IBitmapFilter[] {
                 noopFilter, rainbowFilter, blackWhiteFilter, swapFilter, /*magicMosaic,*/
                 zenFilter, miamiFilter, hellFilter, nightFilter, megaGreenFilter,
                 megaOrangeFilter, megaPinkFilter, megaBlackFilter, crazyFilter
             });
 
+            // Edge detection filter combobox
             cmbEdgeDetection.Items.AddRange(new IBitmapFilter[] {
                 noopFilter, laplacian3x3, laplacian3x3Gray, laplacian5x5, laplacian5x5Gray,
                 laplacianOfGaussian, laplacian3x3OfGaussian3x3, laplacian3x3OfGaussian5x5Type1,
@@ -198,6 +222,7 @@ namespace ImageEDFilter
                 laplacian5x5OfGaussian5x5Type2, sobel, sobelGray, prewitt, prewittGray, kirsch, kirschGray
             });
 
+            // First filter of each list selected by default (None filter)
             cmbColorFilter.SelectedIndex = 0;
             cmbEdgeDetection.SelectedIndex = 0;
         }
@@ -215,22 +240,26 @@ namespace ImageEDFilter
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                // Loading selected image in originalBitmap
                 StreamReader streamReader = new StreamReader(ofd.FileName);
                 originalBitmap = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
                 streamReader.Close();
 
+                // Creating a smaller version of the image in previewBitmap
                 previewBitmap = originalBitmap.CopyToSquareCanvas(picPreview.Width);
                 picPreview.Image = previewBitmap;
 
+                // Applying selected filters on the preview
                 ApplyFilters(true);
             }
 
-            UpdateMessage();
+            CheckProgramState();
         }
 
         // Shows a "Save as..." window and saves the filtered image
         private void btnSaveNewImage_Click(object sender, EventArgs e)
         {
+            // Applying filters on the original image
             ApplyFilters(false);
 
             if (resultBitmap != null)
@@ -255,6 +284,7 @@ namespace ImageEDFilter
                         imgFormat = ImageFormat.Jpeg;
                     }
 
+                    // Saving the result image in a file
                     StreamWriter streamWriter = new StreamWriter(sfd.FileName, false);
                     resultBitmap.Save(streamWriter.BaseStream, imgFormat);
                     streamWriter.Flush();
@@ -264,9 +294,12 @@ namespace ImageEDFilter
                 }
             }
 
-            UpdateMessage();
+            CheckProgramState();
         }
 
+        // Applies the color filter first, then the edge detection filter
+        // If preview is true, the modified image is the one displayed in the window
+        // If preview is false, the modified image is the Bitmap object that will be saved to a file
         private void ApplyFilters(bool preview)
         {
             // We don't do anything if we cannot find the preview bitmap or if no filter was selected
@@ -276,7 +309,7 @@ namespace ImageEDFilter
             }
 
             Bitmap selectedSource = null;
-            Bitmap bitmapResult = null;
+            Bitmap filteredBitmap = null;
 
             // The source is the preview bitmap if previewing
             // It is the original bitmap if saving to a file
@@ -285,46 +318,50 @@ namespace ImageEDFilter
             // If the selected source is not null, we apply the filters
             if (selectedSource != null)
             {
-                IBitmapFilter selectedEDFilter = cmbEdgeDetection.SelectedItem as IBitmapFilter;
                 IBitmapFilter selectedColorFilter = cmbColorFilter.SelectedItem as IBitmapFilter;
+                IBitmapFilter selectedEDFilter = cmbEdgeDetection.SelectedItem as IBitmapFilter;
 
-                bitmapResult = selectedSource;
+                filteredBitmap = selectedSource;
 
-                if (selectedEDFilter != null)
-                {
-                    bitmapResult = selectedEDFilter.Apply(bitmapResult);
-                }
-
+                // Applying the selected color filter
                 if (selectedColorFilter != null)
                 {
-                    bitmapResult = selectedColorFilter.Apply(bitmapResult);
+                    filteredBitmap = selectedColorFilter.Apply(filteredBitmap);
+                }
+
+                // Applying the selected ED filter
+                if (selectedEDFilter != null)
+                {
+                    filteredBitmap = selectedEDFilter.Apply(filteredBitmap);
                 }
             }
 
-            // We check if we have a result
-            if (bitmapResult != null)
+            if (filteredBitmap != null)
             {
                 if (preview == true)
                 {
                     // We display the result in the window (if previewing)
-                    picPreview.Image = bitmapResult;
+                    picPreview.Image = filteredBitmap;
                 }
                 else
                 {
                     // Or we store the result in resultBitmap (if saving to a file)
-                    resultBitmap = bitmapResult;
+                    resultBitmap = filteredBitmap;
                 }
             }
 
-            UpdateMessage();
+            // Updating the program's state
+            CheckProgramState();
         }
 
-        private void NeighbourCountValueChangedEventHandler(object sender, EventArgs e)
+        // The color filter was changed
+        private void cmbColorFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyFilters(true);
         }
 
-        private void cmbColorFilter_SelectedIndexChanged(object sender, EventArgs e)
+        // The edge detection filter was changed
+        private void cmbEdgeDetection_SelectedIndexChanged(object sender, EventArgs e)
         {
             ApplyFilters(true);
         }

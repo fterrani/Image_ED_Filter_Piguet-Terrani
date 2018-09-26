@@ -10,6 +10,7 @@ using System.Text;
 
 namespace ImageEDFilter
 {
+    // This class defines various matrices used in edge detection filters
     public static class Matrix
     {
         public static double[,] Laplacian3x3

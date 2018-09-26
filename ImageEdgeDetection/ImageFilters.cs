@@ -8,7 +8,7 @@ namespace ImageEDFilter
 {
     class ImageFilters
     {
-        //Rainbow Filter
+        // Rainbow Filter - Colors the left side of the image with colored bands
         public static Bitmap RainbowFilter(Bitmap bmp)
         {
 
@@ -21,22 +21,27 @@ namespace ImageEDFilter
 
                     if (i < (raz))
                     {
+                        // Cyan band
                         temp.SetPixel(i, x, Color.FromArgb(bmp.GetPixel(i, x).R / 5, bmp.GetPixel(i, x).G, bmp.GetPixel(i, x).B));
                     }
                     else if (i < (raz * 2))
                     {
+                        // Magenta band
                         temp.SetPixel(i, x, Color.FromArgb(bmp.GetPixel(i, x).R, bmp.GetPixel(i, x).G / 5, bmp.GetPixel(i, x).B));
                     }
                     else if (i < (raz * 3))
                     {
+                        // Yellow band
                         temp.SetPixel(i, x, Color.FromArgb(bmp.GetPixel(i, x).R, bmp.GetPixel(i, x).G, bmp.GetPixel(i, x).B / 5));
                     }
                     else if (i < (raz * 4))
                     {
+                        // Green band
                         temp.SetPixel(i, x, Color.FromArgb(bmp.GetPixel(i, x).R / 5, bmp.GetPixel(i, x).G, bmp.GetPixel(i, x).B / 5));
                     }
                     else
                     {
+                        // Remaining of the image is darkened
                         temp.SetPixel(i, x, Color.FromArgb(bmp.GetPixel(i, x).R / 5, bmp.GetPixel(i, x).G / 5, bmp.GetPixel(i, x).B / 5));
                     }
                 }
@@ -45,7 +50,7 @@ namespace ImageEDFilter
             return temp;
         }
 
-        //apply color filter at your own taste
+        // Divides each channel value with the provided numbers (allowing to change the image's colors)
         public static Bitmap ApplyFilter(Bitmap bmp, int alpha, int red, int blue, int green)
         {
 
@@ -65,7 +70,7 @@ namespace ImageEDFilter
             return temp;
         }
 
-        //black and white filter
+        // Black and white filter (grayscale)
         public static Bitmap BlackWhite(Bitmap bmp)
         {
             int rgb;
@@ -86,7 +91,7 @@ namespace ImageEDFilter
 
         }
 
-        //apply color filter to swap pixel colors
+        // Swaps color channels (G->R, B->G, R->B)
         public static Bitmap ApplyFilterSwap(Bitmap bmp)
         {
 
@@ -106,7 +111,7 @@ namespace ImageEDFilter
             return temp;
         }
 
-        //apply color filter to swap pixel colors (also divide each channel with a number)
+        // Divide each channel with a number (see ApplyFilter) and swaps color channels (G->R, B->G, R->B)
         public static Bitmap ApplyFilterSwapDivide(Bitmap bmp, int a, int r, int g, int b)
         {
 
@@ -127,7 +132,8 @@ namespace ImageEDFilter
         }
 
 
-        //apply color filter to swap pixel colors
+        // Turns pixels whose green channel value falls in the ]min;max[ interval to white
+        // Sets other pixel's color to co
         public static Bitmap ApplyFilterMega(Bitmap bmp, int max, int min, Color co)
         {
 
@@ -141,8 +147,7 @@ namespace ImageEDFilter
                     Color c = bmp.GetPixel(i, x);
                     if (c.G > min && c.G < max)
                     {
-                        Color cLayer = Color.White;
-                        temp.SetPixel(i, x, cLayer);
+                        temp.SetPixel(i, x, Color.White);
                     }
                     else
                     {
@@ -156,7 +161,7 @@ namespace ImageEDFilter
         }
 
         // BUGGED FILTER! (works only on square images)
-        //apply magic mosaic
+        // Apply magic mosaic. The image is divided in different parts. Some are mirrored along a diagonal, others are left as is.
         public static Bitmap DivideCrop(Bitmap bmp)
         {
             int razX = Convert.ToInt32(bmp.Width / 3);

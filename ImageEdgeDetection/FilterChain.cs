@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ImageEDFilter
 {
+    // This class defines a filter consisting in a set of filters applied sequentially
     class FilterChain : IBitmapFilter
     {
         private string name = null;
@@ -15,12 +16,14 @@ namespace ImageEDFilter
         {
             get
             {
+                // Returning the name of the filter if one was defined
                 if (name != null)
                     return name;
 
                 string compoundName = "";
                 string sep = " of ";
 
+                // If no name was defined, we compose the filter's name from the composing filters' names
                 for (int i = filters.Count - 1; i >= 0; i--)
                 {
                     compoundName += filters[i].Name;
@@ -67,6 +70,7 @@ namespace ImageEDFilter
             return bmp;
         }
 
+        // When converted to a string, the name of the filter is returned
         public override string ToString()
         {
             return Name;

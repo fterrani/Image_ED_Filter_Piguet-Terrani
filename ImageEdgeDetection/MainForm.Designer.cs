@@ -37,10 +37,10 @@
             this.cmbColorFilter = new System.Windows.Forms.ComboBox();
             this.lbMessage = new System.Windows.Forms.Label();
             this.picMessageIcon = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlDarkBackground = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMessageIcon)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.pnlDarkBackground.SuspendLayout();
             this.SuspendLayout();
             // 
             // picPreview
@@ -87,7 +87,7 @@
             this.cmbEdgeDetection.Name = "cmbEdgeDetection";
             this.cmbEdgeDetection.Size = new System.Drawing.Size(282, 37);
             this.cmbEdgeDetection.TabIndex = 20;
-            this.cmbEdgeDetection.SelectedIndexChanged += new System.EventHandler(this.NeighbourCountValueChangedEventHandler);
+            this.cmbEdgeDetection.SelectedIndexChanged += new System.EventHandler(this.cmbEdgeDetection_SelectedIndexChanged);
             // 
             // labelEdge
             // 
@@ -140,21 +140,21 @@
             this.picMessageIcon.TabIndex = 26;
             this.picMessageIcon.TabStop = false;
             // 
-            // panel1
+            // pnlDarkBackground
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.panel1.Controls.Add(this.picPreview);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(772, 599);
-            this.panel1.TabIndex = 27;
+            this.pnlDarkBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlDarkBackground.Controls.Add(this.picPreview);
+            this.pnlDarkBackground.Location = new System.Drawing.Point(12, 12);
+            this.pnlDarkBackground.Name = "pnlDarkBackground";
+            this.pnlDarkBackground.Size = new System.Drawing.Size(772, 599);
+            this.pnlDarkBackground.TabIndex = 27;
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(796, 733);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlDarkBackground);
             this.Controls.Add(this.picMessageIcon);
             this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.cmbColorFilter);
@@ -171,7 +171,7 @@
             this.Text = "Image Edge Detection";
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMessageIcon)).EndInit();
-            this.panel1.ResumeLayout(false);
+            this.pnlDarkBackground.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,7 +188,7 @@
         private System.Windows.Forms.ComboBox cmbColorFilter;
         private System.Windows.Forms.Label lbMessage;
         private System.Windows.Forms.PictureBox picMessageIcon;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlDarkBackground;
     }
 }
 

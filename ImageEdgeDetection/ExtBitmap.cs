@@ -16,7 +16,7 @@ namespace ImageEDFilter
 {
     public static class ExtBitmap
     {
-        // Copies sourceBitmap to a new Bitmap object 
+        // Copies sourceBitmap to a new Bitmap object (the image is resized; proportions are preserved)
         public static Bitmap CopyToSquareCanvas(this Bitmap sourceBitmap, int canvasWidthLength)
         {
             float ratio = 1.0f;
@@ -47,6 +47,7 @@ namespace ImageEDFilter
             return bitmapResult;
         }
 
+        // Applies a simple convolution filter on sourceBitmap
         public static Bitmap ConvolutionFilter(Bitmap sourceBitmap,
                                              double[,] filterMatrix,
                                                   double factor = 1,
@@ -55,12 +56,14 @@ namespace ImageEDFilter
         {
             byte[] simpleConvFunc(byte[] pixelBuffer, int width, int height, int stride)
             {
+                // We apply only one matrix on the buffer
                 return SimpleConvolution(pixelBuffer, width, height, stride, filterMatrix, factor, bias);
             }
 
             return ApplyConvolutionFunc(sourceBitmap, simpleConvFunc, grayscale);
         }
 
+        // Applies an XY convolution filter on sourceBitmap
         public static Bitmap ConvolutionFilter(Bitmap sourceBitmap,
                                                 double[,] xFilterMatrix,
                                                 double[,] yFilterMatrix,
@@ -68,13 +71,14 @@ namespace ImageEDFilter
         {
             byte[] xyConvFunc(byte[] pixelBuffer, int width, int height, int stride)
             {
+                // We apply two matrices on the buffer (one for X, the other for Y)
                 return XYConvolution(pixelBuffer, width, height, stride, xFilterMatrix, yFilterMatrix);
             }
 
             return ApplyConvolutionFunc(sourceBitmap, xyConvFunc, grayscale);
         }
 
-        // Applies a convolution filter (single matrix, factor and bias)
+        // Applies the provided convolution function on sourceBitmap
         private static Bitmap ApplyConvolutionFunc(Bitmap sourceBitmap, Func<byte[], int, int, int, byte[]> convolutionFunc, bool grayscale = false)
         {
             BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
@@ -91,6 +95,7 @@ namespace ImageEDFilter
             {
                 float rgb = 0;
 
+                // Converting each pixel to grayscale
                 for (int k = 0; k < pixelBuffer.Length; k += 4)
                 {
                     rgb =  pixelBuffer[k + 0] * 0.11f;
@@ -122,6 +127,7 @@ namespace ImageEDFilter
             return resultBitmap;
         }
 
+        // Applies a single matrix on pixelBuffer
         private static byte[] SimpleConvolution(byte[] pixelBuffer, int width, int height, int stride, double[,] filterMatrix, double factor = 1, int bias = 0)
         {
             byte[] resultBuffer = new byte[ pixelBuffer.Length ];
@@ -200,6 +206,7 @@ namespace ImageEDFilter
             return resultBuffer;
         }
 
+        // Applies two matrices on pixelBuffer (one for X, the other for Y)
         private static byte[] XYConvolution( byte[] pixelBuffer, int width, int height, int stride, double[,] xFilterMatrix, double[,] yFilterMatrix )
         {
             byte[] resultBuffer = new byte[ pixelBuffer.Length ];
