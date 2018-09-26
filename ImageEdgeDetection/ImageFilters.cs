@@ -106,7 +106,7 @@ namespace ImageEDFilter
             return temp;
         }
 
-        //apply color filter to swap pixel colors
+        //apply color filter to swap pixel colors (also divide each channel with a number)
         public static Bitmap ApplyFilterSwapDivide(Bitmap bmp, int a, int r, int g, int b)
         {
 
