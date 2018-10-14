@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ImageEDFilter
 {
-    class ImageFilters
+    public class ImageFilters
     {
         // Rainbow Filter - Colors the left side of the image with colored bands
         public static Bitmap RainbowFilter(Bitmap bmp)

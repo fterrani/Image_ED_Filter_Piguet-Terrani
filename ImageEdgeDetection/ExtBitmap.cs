@@ -79,7 +79,7 @@ namespace ImageEDFilter
         }
 
         // Applies the provided convolution function on sourceBitmap
-        private static Bitmap ApplyConvolutionFunc(Bitmap sourceBitmap, Func<byte[], int, int, int, byte[]> convolutionFunc, bool grayscale = false)
+        public static Bitmap ApplyConvolutionFunc(Bitmap sourceBitmap, Func<byte[], int, int, int, byte[]> convolutionFunc, bool grayscale = false)
         {
             BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
                                      sourceBitmap.Width, sourceBitmap.Height),
@@ -128,7 +128,7 @@ namespace ImageEDFilter
         }
 
         // Applies a single matrix on pixelBuffer
-        private static byte[] SimpleConvolution(byte[] pixelBuffer, int width, int height, int stride, double[,] filterMatrix, double factor = 1, int bias = 0)
+        public static byte[] SimpleConvolution(byte[] pixelBuffer, int width, int height, int stride, double[,] filterMatrix, double factor = 1, int bias = 0)
         {
             byte[] resultBuffer = new byte[ pixelBuffer.Length ];
             double blue = 0.0;
@@ -145,8 +145,7 @@ namespace ImageEDFilter
 
             for (int offsetY = filterOffset; offsetY < height - filterOffset; offsetY++)
             {
-                for (int offsetX = filterOffset; offsetX <
-                    width - filterOffset; offsetX++)
+                for (int offsetX = filterOffset; offsetX < width - filterOffset; offsetX++)
                 {
                     blue = 0;
                     green = 0;
@@ -196,7 +195,7 @@ namespace ImageEDFilter
         }
 
         // Applies two matrices on pixelBuffer (one for X, the other for Y)
-        private static byte[] XYConvolution( byte[] pixelBuffer, int width, int height, int stride, double[,] xFilterMatrix, double[,] yFilterMatrix )
+        public static byte[] XYConvolution( byte[] pixelBuffer, int width, int height, int stride, double[,] xFilterMatrix, double[,] yFilterMatrix )
         {
             byte[] resultBuffer = new byte[ pixelBuffer.Length ];
 
