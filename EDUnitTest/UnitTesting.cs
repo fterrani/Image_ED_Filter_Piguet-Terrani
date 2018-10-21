@@ -410,5 +410,34 @@ namespace EDUnitTest
 
             Assert.IsTrue(AreBitmapEquals(expected, actual));
         }
+
+
+
+
+        [TestMethod]
+        public void TestApplyFilterSwap()
+        {
+
+            Bitmap original = new Bitmap("./landscape.png");
+
+            // We could have done instead : new Bitmap(original);
+            // Bitmap filtered = (Bitmap) original.Clone();
+            Bitmap filtered = ImageFilters.ApplyFilterSwap(original);
+
+
+            for (int i = 0; i < original.Width; i++)
+            {
+                for (int j = 0; j < original.Height; j++)
+                {
+
+                    bool greenToRed = (original.GetPixel(i, j).G == filtered.GetPixel(i, j).R);
+                    bool blueToGreen = (original.GetPixel(i, j).B == filtered.GetPixel(i, j).G);
+                    bool redToBlue = (original.GetPixel(i, j).R == filtered.GetPixel(i, j).B);
+
+                    // If the swap is not done correctly we stop the test
+                    Assert.IsTrue(greenToRed && blueToGreen && redToBlue);
+                }
+            }
+        }
     }
 }
