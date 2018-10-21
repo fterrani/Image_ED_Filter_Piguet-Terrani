@@ -197,7 +197,7 @@ namespace EDUnitTest
             Assert.AreEqual(expectedHeight, bmp.Size.Height);
         }
 
-        // We test the siple convolution computation with all values in range
+        // We test the simple convolution computation with all values in range
         [TestMethod]
         public void TestImageED_ExtBitmap_SimpleConvolution_InRange()
         {
