@@ -73,33 +73,22 @@ namespace EDUnitTest
             byte[] aData = GetBitmapBytes(a);
             byte[] bData = GetBitmapBytes(b);
 
-            // If the bitmaps don't contain the same number of bytes, they are not equal
-            if (aData.Length != bData.Length)
-                return false;
-
-            // Storing length to avoid accessing aData.Length at each iteration
-            // (this probably doesn't happen nowadays #GoodCompilers)
-            int length = aData.Length;
-
-            // If we encounter two bytes that aren't equal, the bitmaps are not equal
-            for (int i = 0; i < length; i++)
-            {
-                if (aData[i] != bData[i])
-                    return false;
-            }
-
-            return true;
+            return AreBytesEqual( aData, bData );
         }
 
         // Returns TRUE if both byte arrays are the same length and
         // contain the same values, FALSE otherwise.
         public bool AreBytesEqual(byte[] a, byte[] b)
         {
+            // If the bitmaps don't contain the same number of bytes, they are not equal
             if (a.Length != b.Length)
                 return false;
 
+            // Storing length to avoid accessing aData.Length at each iteration
+            // (this probably doesn't happen nowadays #GoodCompilers)
             int length = a.Length;
 
+            // If we encounter two bytes that aren't equal, the bitmaps are not equal
             for (int i = 0; i < length; i++)
             {
                 if (a[i] != b[i])
@@ -284,9 +273,67 @@ namespace EDUnitTest
             Assert.IsTrue(AreBytesEqual(expectedBytes, actualBytes));
         }
 
-        // We verify that the ApplyConvolutionFunc leaves colors untouched if grayscale = false
+        // We verify that the ApplyConvolutionFunc properly computes pixel values
         [TestMethod]
         public void ExtBitmap_ApplyConvolutionFunc_Color()
+        {
+            // 3x3 image
+            byte[] originalBytes = {
+                2,3,5,255, 7,11,13,255, 17,19,23,255,
+                29,31,37,255, 89,101,103,255, 53,59,61,255,
+               67,71,73,255, 79,83,89,255, 41,43,47,255
+            };
+
+            double[,] matrix = new double[,] {
+                {-11, -19, -17},
+                {-13, 23, -7},
+                {-5, -3, -2}
+            };
+
+            // The outer border is transparent black
+            byte[] expectedBytes = {
+                0,0,0,0, 0,0,0,0, 0,0,0,0,
+                0,0,0,0,
+                        // Expecting 201
+                        (-11*2) + (-19*7) + (-17*17)
+                        + (-13*29) + (23*89) + (-7*53)
+                        + (-5*67) + (-3*79) + (-2*41),
+
+                        // Expecting 252
+                        (-11*3) + (-19*11) + (-17*19)
+                        + (-13*31) + (23*101) + (-7*59)
+                        + (-5*71) + (-3*83) + (-2*43),
+
+                        // Expecting 42
+                        (-11*5) + (-19*13) + (-17*23)
+                        + (-13*37) + (23*103) + (-7*61)
+                        + (-5*73) + (-3*89) + (-2*47),
+
+                        255,
+
+                                      0,0,0,0,
+                0,0,0,0, 0,0,0,0, 0,0,0,0
+            };
+
+            Bitmap original = new Bitmap(3, 3);
+            SetBitmapBytes(original, originalBytes);
+
+            Bitmap expected = new Bitmap(3, 3);
+            SetBitmapBytes(expected, expectedBytes);
+
+            byte[] ConvolutionFunc(byte[] arrBytes, int w, int h, int stride)
+            {
+                return ImageEDFilter.ExtBitmap.SimpleConvolution(arrBytes, 3, 3, 3 * 4, matrix);
+            }
+
+            Bitmap actual = ImageEDFilter.ExtBitmap.ApplyConvolutionFunc(original, ConvolutionFunc, false);
+
+            Assert.IsTrue(AreBitmapEquals(expected, actual));
+        }
+
+        // We verify that the ApplyConvolutionFunc leaves colors untouched if grayscale = false
+        [TestMethod]
+        public void ExtBitmap_ApplyConvolutionFunc_Noop()
         {
             // 3x3 image
             byte[] originalBytes = {
@@ -315,14 +362,14 @@ namespace EDUnitTest
             };
 
             Bitmap original = new Bitmap(3, 3);
-            SetBitmapBytes( original, originalBytes );
+            SetBitmapBytes(original, originalBytes);
 
             Bitmap expected = new Bitmap(3, 3);
-            SetBitmapBytes( expected, expectedBytes );
+            SetBitmapBytes(expected, expectedBytes);
 
-            byte[] NoopConvolution( byte[] arrBytes, int w, int h, int stride )
+            byte[] NoopConvolution(byte[] arrBytes, int w, int h, int stride)
             {
-                return ImageEDFilter.ExtBitmap.SimpleConvolution(arrBytes, 3, 3, 3 * 4, noopMatrix );
+                return ImageEDFilter.ExtBitmap.SimpleConvolution(arrBytes, 3, 3, 3 * 4, noopMatrix);
             }
 
             Bitmap actual = ImageEDFilter.ExtBitmap.ApplyConvolutionFunc(original, NoopConvolution, false);
