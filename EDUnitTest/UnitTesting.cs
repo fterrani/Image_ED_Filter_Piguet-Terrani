@@ -414,7 +414,7 @@ namespace EDUnitTest
             int max = 230;
             Color originalColor, expectedColor, actualColor;
 
-            Bitmap original = new Bitmap("./cat.jpg");
+            Bitmap original = new Bitmap("./landscape.png");
             Bitmap filtered = ImageEDFilter.ImageFilters.ApplyFilterMega(original, max, min, c);
 
 
@@ -434,7 +434,7 @@ namespace EDUnitTest
                         expectedColor = c;
                     }
 
-                    Assert.AreEqual(expectedColor, actualColor);
+                    Assert.AreEqual(expectedColor.ToArgb(), actualColor.ToArgb());
                 }
             }
         }
