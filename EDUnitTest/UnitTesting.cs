@@ -406,37 +406,40 @@ namespace EDUnitTest
 
 
         [TestMethod]
-        public void TestApplyFilterMega()
+        public void ImageFilters_TestApplyFilterMega_ColorCheck()
         {
             Color c = Color.Black;
 
-            int min = 110, max = 230;
-            bool white = false, color = false;
+            int min = 110;
+            int max = 230;
+            Color originalColor, expectedColor, actualColor;
 
-            Bitmap original = new Bitmap("./landscape.png");
+            Bitmap original = new Bitmap("./cat.jpg");
             Bitmap filtered = ImageEDFilter.ImageFilters.ApplyFilterMega(original, max, min, c);
 
 
-            for (int i = 0; i < original.Width; i++)
+            for (int x = 0; x < original.Width; x++)
             {
-                for (int j = 0; j < original.Height; j++)
+                for (int y = 0; y < original.Height; y++)
                 {
-                    if (original.GetPixel(i, j).G > min && original.GetPixel(i, j).G < max)
+                    originalColor = original.GetPixel(x, y);
+                    actualColor = filtered.GetPixel(x, y);
+
+                    if (originalColor.G > min && originalColor.G < max)
                     {
-                        white = (filtered.GetPixel(i, j) == Color.White);
+                        expectedColor = Color.White;
                     }
                     else
                     {
-                        color = (filtered.GetPixel(i, j) == c);
+                        expectedColor = c;
                     }
 
-                    // If the filter is not done correctly we stop the test
-                    Assert.IsTrue(white && color);
+                    Assert.AreEqual(expectedColor, actualColor);
                 }
             }
         }
 
-        
+
         // We test the average black and white filter
         [TestMethod]
         public void ImageFilters_BlackWhite_Average()
