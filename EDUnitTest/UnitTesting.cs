@@ -388,14 +388,15 @@ namespace EDUnitTest
             // We could have done instead : new Bitmap(original);
             Bitmap filtered = ImageEDFilter.ImageFilters.ApplyFilterSwap(original);
 
+            bool greenToRed, blueToGreen, redToBlue;
 
             for (int i = 0; i < original.Width; i++)
             {
                 for (int j = 0; j < original.Height; j++)
                 {
-                    bool greenToRed = (original.GetPixel(i, j).G == filtered.GetPixel(i, j).R);
-                    bool blueToGreen = (original.GetPixel(i, j).B == filtered.GetPixel(i, j).G);
-                    bool redToBlue = (original.GetPixel(i, j).R == filtered.GetPixel(i, j).B);
+                    greenToRed = (original.GetPixel(i, j).G == filtered.GetPixel(i, j).R);
+                    blueToGreen = (original.GetPixel(i, j).B == filtered.GetPixel(i, j).G);
+                    redToBlue = (original.GetPixel(i, j).R == filtered.GetPixel(i, j).B);
 
                     // If the swap is not done correctly we stop the test
                     Assert.IsTrue(greenToRed && blueToGreen && redToBlue);
