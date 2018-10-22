@@ -406,7 +406,7 @@ namespace EDUnitTest
 
 
         [TestMethod]
-        public void ImageFilters_TestApplyFilterMega_ColorCheck()
+        public void ImageFilters_ApplyFilterMega_ColorCheck()
         {
             Color c = Color.Black;
 
