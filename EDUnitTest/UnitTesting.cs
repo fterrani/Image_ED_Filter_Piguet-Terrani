@@ -109,40 +109,9 @@ namespace EDUnitTest
             return true;
         }
 
-        // We test the average black and white filter
-        [TestMethod]
-        public void ImageFilters_BlackWhite_Average()
-        {
-            Bitmap original = new Bitmap("./16777216colors.png");
-            Bitmap expected = (Bitmap)original.Clone();
-
-            byte[] bytes = GetBitmapBytes(expected);
-            int a, r, g, b, avg;
-
-            for (int i = 0; i < bytes.Length; i += 4)
-            {
-                r = i;
-                g = i + 1;
-                b = i + 2;
-                a = i + 3;
-
-                avg = (bytes[r] + bytes[g] + bytes[b]) / 3;
-
-                bytes[r] = (byte)avg;
-                bytes[g] = (byte)avg;
-                bytes[b] = (byte)avg;
-            }
-
-            SetBitmapBytes(expected, bytes);
-
-            Bitmap actual = ImageEDFilter.ImageFilters.BlackWhite(original);
-
-            Assert.IsTrue(AreBitmapEquals(expected, actual));
-        }
-
         // We test if a Bitmap too wide copied to a square area has the right dimensions
         [TestMethod]
-        public void ImageEDFilter_ExtBitmap_CopyToSquareCanvas_TooWide()
+        public void ExtBitmap_CopyToSquareCanvas_TooWide()
         {
             int imgWidth = 857;
             int imgHeight = 251;
@@ -161,7 +130,7 @@ namespace EDUnitTest
 
         // We test if a Bitmap too high copied to a square area has the right dimensions
         [TestMethod]
-        public void ImageEDFilter_ExtBitmap_CopyToSquareCanvas_TooHigh()
+        public void ExtBitmap_CopyToSquareCanvas_TooHigh()
         {
             int imgWidth = 227;
             int imgHeight = 907;
@@ -181,7 +150,7 @@ namespace EDUnitTest
         // We test if an already squared Bitmap is resized to the right dimensions in
         // the squared area
         [TestMethod]
-        public void ImageEDFilter_ExtBitmap_CopyToSquareCanvas_AlreadySquared()
+        public void ExtBitmap_CopyToSquareCanvas_AlreadySquared()
         {
             int imgSide = 773;
             int squareSide = 367;
@@ -199,7 +168,7 @@ namespace EDUnitTest
 
         // We test the simple convolution computation with all values in range
         [TestMethod]
-        public void TestImageED_ExtBitmap_SimpleConvolution_InRange()
+        public void ExtBitmap_SimpleConvolution_InRange()
         {
             // We use a test byte array and a test matrix
             // (no Bitmap object involved)
@@ -249,7 +218,7 @@ namespace EDUnitTest
 
         // Simple convolution with computed values above range and set to 255
         [TestMethod]
-        public void TestImageED_ExtBitmap_SimpleConvolution_AboveRange()
+        public void ExtBitmap_SimpleConvolution_AboveRange()
         {
             // 3x3 image
             byte[] bytes = {
@@ -283,7 +252,7 @@ namespace EDUnitTest
 
         // Simple convolution with computed values below range and set to 0
         [TestMethod]
-        public void TestImageED_ExtBitmap_SimpleConvolution_BelowRange()
+        public void ExtBitmap_SimpleConvolution_BelowRange()
         {
             // 3x3 image
             byte[] bytes = {
@@ -317,7 +286,7 @@ namespace EDUnitTest
 
         // We verify that the ApplyConvolutionFunc leaves colors untouched if grayscale = false
         [TestMethod]
-        public void TestImageED_ApplyConvolutionFunc_Color()
+        public void ExtBitmap_ApplyConvolutionFunc_Color()
         {
             // 3x3 image
             byte[] originalBytes = {
@@ -364,7 +333,7 @@ namespace EDUnitTest
         // We verify that the ApplyConvolutionFunc properly computes
         // the perceived luminance value if grayscale = true
         [TestMethod]
-        public void TestImageED_ApplyConvolutionFunc_PerceivedLuminance()
+        public void ExtBitmap_ApplyConvolutionFunc_PerceivedLuminance()
         {
             // 3x3 image (note that the average of RGB channels is equal to 68.666...)
             byte[] originalBytes = {
@@ -411,25 +380,19 @@ namespace EDUnitTest
             Assert.IsTrue(AreBitmapEquals(expected, actual));
         }
 
-
-
-
         [TestMethod]
-        public void TestApplyFilterSwap()
+        public void ImageFilters_ApplyFilterSwap_ChannelSwapCheck()
         {
-
             Bitmap original = new Bitmap("./landscape.png");
 
             // We could have done instead : new Bitmap(original);
-            // Bitmap filtered = (Bitmap) original.Clone();
-            Bitmap filtered = ImageFilters.ApplyFilterSwap(original);
+            Bitmap filtered = ImageEDFilter.ImageFilters.ApplyFilterSwap(original);
 
 
             for (int i = 0; i < original.Width; i++)
             {
                 for (int j = 0; j < original.Height; j++)
                 {
-
                     bool greenToRed = (original.GetPixel(i, j).G == filtered.GetPixel(i, j).R);
                     bool blueToGreen = (original.GetPixel(i, j).B == filtered.GetPixel(i, j).G);
                     bool redToBlue = (original.GetPixel(i, j).R == filtered.GetPixel(i, j).B);
@@ -438,6 +401,70 @@ namespace EDUnitTest
                     Assert.IsTrue(greenToRed && blueToGreen && redToBlue);
                 }
             }
+        }
+
+
+        [TestMethod]
+        public void TestApplyFilterMega()
+        {
+            Color c = Color.Black;
+
+            int min = 110, max = 230;
+            bool white = false, color = false;
+
+            Bitmap original = new Bitmap("./landscape.png");
+            Bitmap filtered = ImageEDFilter.ImageFilters.ApplyFilterMega(original, max, min, c);
+
+
+            for (int i = 0; i < original.Width; i++)
+            {
+                for (int j = 0; j < original.Height; j++)
+                {
+                    if (original.GetPixel(i, j).G > min && original.GetPixel(i, j).G < max)
+                    {
+                        white = (filtered.GetPixel(i, j) == Color.White);
+                    }
+                    else
+                    {
+                        color = (filtered.GetPixel(i, j) == c);
+                    }
+
+                    // If the filter is not done correctly we stop the test
+                    Assert.IsTrue(white && color);
+                }
+            }
+        }
+
+        
+        // We test the average black and white filter
+        [TestMethod]
+        public void ImageFilters_BlackWhite_Average()
+        {
+            Bitmap original = new Bitmap("./landscape.png");
+            Bitmap expected = (Bitmap)original.Clone();
+
+            byte[] bytes = GetBitmapBytes(expected);
+            int a, r, g, b, avg;
+
+            for (int i = 0; i < bytes.Length; i += 4)
+            {
+                r = i;
+                g = i + 1;
+                b = i + 2;
+                a = i + 3;
+
+                avg = (bytes[r] + bytes[g] + bytes[b]) / 3;
+
+                bytes[r] = (byte)avg;
+                bytes[g] = (byte)avg;
+                bytes[b] = (byte)avg;
+            }
+
+            SetBitmapBytes(expected, bytes);
+
+            Bitmap actual = ImageEDFilter.ImageFilters.BlackWhite(original);
+
+            Assert.IsTrue(AreBitmapEquals(expected, actual));
         }
     }
 }
