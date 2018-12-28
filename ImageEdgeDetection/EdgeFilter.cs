@@ -7,17 +7,16 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    abstract class PixelFilter : IBitmapFilter
+    abstract class EdgeFilter : IBitmapFilter
     {
         public string Name { get; set; }
 
-        public PixelFilter( string name )
+        public EdgeFilter(string name)
         {
             Name = name;
         }
 
         public abstract Bitmap Apply(Bitmap bmp);
-
         
         public override string ToString()
         {

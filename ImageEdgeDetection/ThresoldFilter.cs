@@ -8,11 +8,17 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class BlackWhiteFilter : PixelFilter
+    class ThresoldFilter : PixelFilter
     {
-        public BlackWhiteFilter(string name) : base(name)
-        {
+        private float min;
+        private float max;
+        private Color color;
 
+        public ThresoldFilter(string name, float _min, float _max, Color _color) : base(name)
+        {
+            min = _min;
+            max = _max;
+            color = _color;
         }
 
         public override Bitmap Apply(Bitmap sourceBitmap)
@@ -27,21 +33,36 @@ namespace ImageEdgeDetection
             Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
             sourceBitmap.UnlockBits(sourceData);
 
-            int average = 0;
+            float luminance = 0.0f;
+            byte red, green, blue;
 
             // Converting each pixel to grayscale
             for (int k = 0; k < pixelBuffer.Length; k += 4)
             {
                 // Computing arithmetic mean of red, green and blue channels
-                average = pixelBuffer[k + 0];
-                average += pixelBuffer[k + 1];
-                average += pixelBuffer[k + 2];
-                average /= 3;
+                luminance = pixelBuffer[k + 0]/255 * 0.11f;
+                luminance += pixelBuffer[k + 1]/255 * 0.59f;
+                luminance += pixelBuffer[k + 2]/255 * 0.3f;
+
+
+                if (luminance >= min && luminance <= max)
+                {
+                    red = 255;
+                    green = 255;
+                    blue = 255;
+                }
+
+                else
+                {
+                    red = color.R;
+                    green = color.G;
+                    blue = color.B;
+                }
 
                 // Assigning the computed mean to all channels
-                pixelBuffer[k + 0] = (byte) average;
-                pixelBuffer[k + 1] = (byte) average;
-                pixelBuffer[k + 2] = (byte) average;
+                pixelBuffer[k + 0] = red;
+                pixelBuffer[k + 1] = green;
+                pixelBuffer[k + 2] = blue;
                 pixelBuffer[k + 3] = 255;
             }
 

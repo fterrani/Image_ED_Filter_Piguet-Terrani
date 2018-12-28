@@ -10,9 +10,7 @@ namespace ImageEdgeDetection
     {
         void SetPreviewBitmap( Bitmap bitmap );
 
-        void SetStatus( int status );
-
-        void SetMessage( string message );
+        void SetStatusMessage( BitmapEditorStatus status, string message );
 
         void SetControlsEnabled( bool enabled );
     }

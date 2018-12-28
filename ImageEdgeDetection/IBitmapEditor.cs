@@ -24,6 +24,9 @@ namespace ImageEdgeDetection
         IBitmapFilter[] GetPixelFilters();
         IBitmapFilter[] GetEdgeFilters();
 
+        void SetPixelFilter(IBitmapFilter pixelFilter);
+        void SetEdgeFilter(IBitmapFilter edgeFilter);
+
         // Booleans that return some states  
         bool HasImage();
         bool HasEdgeFilter();
