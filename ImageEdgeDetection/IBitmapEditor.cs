@@ -17,13 +17,14 @@ namespace ImageEdgeDetection
         void ReadFile(string file);
         bool WriteFile(string file);
 
-        // ?
+        // Apply the filter we want
         void Apply();
 
         // Get all the pixel and edge filter in arrays
         IBitmapFilter[] GetPixelFilters();
         IBitmapFilter[] GetEdgeFilters();
 
+        // Set the filter to the Bitmap
         void SetPixelFilter(IBitmapFilter pixelFilter);
         void SetEdgeFilter(IBitmapFilter edgeFilter);
 
