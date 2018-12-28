@@ -25,11 +25,12 @@ namespace ImageEDFilter
        
         public MainForm()
         {
-            //TODO instanciate BitmapEditor
-          
-
-            // Initializes controls edited with the WinForm designer
+            // Initializes controls edited with the WinForm designer (must be done BEFORE creating the BitmapEditor)
             InitializeComponent();
+
+            // Instantiating BitmapEditor (must be done AFTER InitializeComponent() !!)
+            IBitmapFileIO bitmapIO = new BitmapFileIO();
+            editor = new BitmapEditor(bitmapIO, this);
 
             // Populates the comboboxes with a set of IBitmapFilter objects
             PrepareFilterComboboxes();

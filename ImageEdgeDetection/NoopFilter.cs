@@ -11,9 +11,9 @@ namespace ImageEdgeDetection
     {
         public string Name { get; set; }
 
-        public NoopFilter()
+        public NoopFilter( string name)
         {
-            Name = "NOOP filter";
+            Name = name;
         }
 
         public Bitmap Apply(Bitmap bmp)
@@ -22,6 +22,11 @@ namespace ImageEdgeDetection
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
                 System.Drawing.Imaging.PixelFormat.Format32bppRgb
             );
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }
