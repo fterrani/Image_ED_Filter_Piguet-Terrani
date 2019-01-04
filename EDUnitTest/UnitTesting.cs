@@ -151,6 +151,7 @@ namespace EDUnitTest
         [TestMethod()]
         public void BitmapFilter_Apply_ApplyMethod()
         {
+            //TODO received in order 
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
             var filterEd = Substitute.For<IBitmapFilter>();
@@ -197,6 +198,29 @@ namespace EDUnitTest
 
             Assert.IsInstanceOfType(editor.GetEdgeFilters(), typeof(IBitmapFilter[]));
             Assert.AreNotEqual(0, editor.GetEdgeFilters().Length);
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_HasImage_ReturnTrueOrFalse()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            Assert.IsFalse(editor.HasImage());
+
+            editor.SetBitmap(new Bitmap(100, 100));
+            Assert.IsTrue(editor.HasImage());
+
+            try
+            {
+                editor.SetBitmap(null);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOfType(e, typeof(ArgumentNullException));
+            }
         }
 
         [TestMethod()]
