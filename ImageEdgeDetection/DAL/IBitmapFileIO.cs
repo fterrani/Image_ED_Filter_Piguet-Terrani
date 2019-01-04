@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    interface IBitmapFileIO
+    public interface IBitmapFileIO
     {
         // Return a bitmap from a given path
         Bitmap ReadBitmap( string file );

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    interface IBitmapEditor
+    public interface IBitmapEditor
     {
         // Getter & setter for bitmap
         Bitmap GetBitmap();
