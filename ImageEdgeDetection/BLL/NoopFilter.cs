@@ -20,7 +20,7 @@ namespace ImageEdgeDetection
         {
             return bmp.Clone(
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
-                System.Drawing.Imaging.PixelFormat.Format32bppRgb
+                bmp.PixelFormat
             );
         }
 

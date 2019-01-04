@@ -20,8 +20,8 @@ namespace ImageEDFilter
         public static Color COLOR_OK = Color.FromArgb(0, 190, 40);
 
         // Icon paths for warning and success
-        public static string ICON_WARNING = ".\\warning-32x32.png";
-        public static string ICON_OK = ".\\ok-32x32.png";
+        public static string ICON_WARNING = ".\\images\\warning-32x32.png";
+        public static string ICON_OK = ".\\images\\ok-32x32.png";
 
        
         public MainForm()

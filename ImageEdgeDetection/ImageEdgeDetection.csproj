@@ -46,33 +46,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapEditor.cs" />
-    <Compile Include="BitmapEditorStatus.cs" />
-    <Compile Include="BitmapFileIO.cs" />
-    <Compile Include="BitmapFilter.cs" />
-    <Compile Include="ThresoldFilter.cs" />
-    <Compile Include="BlackWhiteFilter.cs" />
-    <Compile Include="ExtBitmap.cs" />
-    <Compile Include="FilterChain.cs" />
-    <Compile Include="IBitmapEditor.cs" />
-    <Compile Include="IBitmapFileIO.cs" />
-    <Compile Include="IBitmapFilter.cs" />
-    <Compile Include="IBitmapViewer.cs" />
-    <Compile Include="ImageFilters.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="BLL\BitmapEditor.cs" />
+    <Compile Include="BLL\BitmapEditorStatus.cs" />
+    <Compile Include="DAL\BitmapFileIO.cs" />
+    <Compile Include="BLL\ThresoldFilter.cs" />
+    <Compile Include="BLL\BlackWhiteFilter.cs" />
+    <Compile Include="BLL\FilterChain.cs" />
+    <Compile Include="BLL\IBitmapEditor.cs" />
+    <Compile Include="DAL\IBitmapFileIO.cs" />
+    <Compile Include="BLL\IBitmapFilter.cs" />
+    <Compile Include="Presentation\IBitmapViewer.cs" />
+    <Compile Include="Presentation\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Presentation\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Matrix.cs" />
-    <Compile Include="MatrixEdgeFilter.cs" />
-    <Compile Include="NoopFilter.cs" />
-    <Compile Include="EdgeFilter.cs" />
-    <Compile Include="PixelFilter.cs" />
+    <Compile Include="BLL\Matrix.cs" />
+    <Compile Include="BLL\MatrixEdgeFilter.cs" />
+    <Compile Include="BLL\NoopFilter.cs" />
+    <Compile Include="BLL\EdgeFilter.cs" />
+    <Compile Include="BLL\PixelFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Presentation\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -96,10 +93,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ok-32x32.png">
+    <Content Include="images\ok-32x32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="warning-32x32.png">
+    <Content Include="images\warning-32x32.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
