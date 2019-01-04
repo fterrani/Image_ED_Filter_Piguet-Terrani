@@ -39,10 +39,10 @@ namespace ImageEdgeDetection
             // Converting each pixel to grayscale
             for (int k = 0; k < pixelBuffer.Length; k += 4)
             {
-                // Computing arithmetic mean of red, green and blue channels
-                luminance = pixelBuffer[k + 0]/255 * 0.11f;
-                luminance += pixelBuffer[k + 1]/255 * 0.59f;
-                luminance += pixelBuffer[k + 2]/255 * 0.3f;
+                // Computing weighted arithmetic mean of red, green and blue channels
+                luminance = pixelBuffer[k + 0]/255.0f * 0.11f;
+                luminance += pixelBuffer[k + 1]/255.0f * 0.59f;
+                luminance += pixelBuffer[k + 2]/255.0f * 0.3f;
 
 
                 if (luminance >= min && luminance <= max)
@@ -59,10 +59,10 @@ namespace ImageEdgeDetection
                     blue = color.B;
                 }
 
-                // Assigning the computed mean to all channels
-                pixelBuffer[k + 0] = red;
+                // Assigning the right color to the current pixel
+                pixelBuffer[k + 0] = blue;
                 pixelBuffer[k + 1] = green;
-                pixelBuffer[k + 2] = blue;
+                pixelBuffer[k + 2] = red;
                 pixelBuffer[k + 3] = 255;
             }
 

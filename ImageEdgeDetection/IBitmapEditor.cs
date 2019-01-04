@@ -18,7 +18,7 @@ namespace ImageEdgeDetection
         bool WriteFile(string file);
 
         // Apply the filter we want
-        void Apply();
+        void ApplyOnPreview();
 
         // Get all the pixel and edge filter in arrays
         IBitmapFilter[] GetPixelFilters();

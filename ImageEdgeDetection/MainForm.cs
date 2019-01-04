@@ -14,6 +14,7 @@ namespace ImageEDFilter
     public partial class MainForm : Form, IBitmapViewer
     {
         private IBitmapEditor editor;
+
         // Text colors for warning and success
         public static Color COLOR_WARNING = Color.FromArgb(70, 40, 0);
         public static Color COLOR_OK = Color.FromArgb(0, 190, 40);
@@ -119,6 +120,7 @@ namespace ImageEDFilter
                 iconPath = ICON_WARNING;
                 msgColor = COLOR_WARNING;
             }
+
             StreamReader streamReader = new StreamReader(iconPath);
             picMessageIcon.Image = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
             lbMessage.ForeColor = msgColor;

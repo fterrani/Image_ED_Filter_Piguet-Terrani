@@ -14,7 +14,7 @@ namespace ImageEdgeDetection
         public const int BMP_PREVIEW = 2;
         public const int BMP_FILTERED = 3;
 
-        public static readonly IBitmapFilter noopFilter = new NoopFilter("");
+        public static readonly IBitmapFilter noopFilter = new NoopFilter("None");
 
         private IBitmapViewer view;
         private IBitmapFileIO bitmapIO;
@@ -29,8 +29,8 @@ namespace ImageEdgeDetection
 
         public BitmapEditor( IBitmapFileIO _bitmapIO, IBitmapViewer _view )
         {
-            bitmapIO = _bitmapIO;
-            view = _view;
+            bitmapIO = _bitmapIO ?? throw new ArgumentNullException();
+            view = _view ?? throw new ArgumentNullException();
 
             CheckEditorState();
         }
@@ -44,7 +44,7 @@ namespace ImageEdgeDetection
         {
             original = bitmap;
             preview = CreatePreview( original, 400 );
-            Apply();
+            ApplyOnPreview();
 
             CheckEditorState();
         }
@@ -98,12 +98,9 @@ namespace ImageEdgeDetection
         public IBitmapFilter[] GetPixelFilters()
         {
             return new IBitmapFilter[] {
-                new NoopFilter("None"),
+                noopFilter,
                 new BlackWhiteFilter("Black and white"),
-                new ThresoldFilter("Thresold filter (black)", 0.45f, 0.65f, Color.Black),
-                new ThresoldFilter("Thresold filter (red)", 0.3f, 0.6f, Color.Red),
-                new ThresoldFilter("Thresold filter (green)", 0.3f, 0.6f, Color.Green),
-                new ThresoldFilter("Thresold filter (blue)", 0.3f, 0.6f, Color.Blue)
+                new ThresoldFilter("Thresold filter (black)", 0.35f, 0.65f, Color.Black)
             };
         }
 
@@ -111,7 +108,7 @@ namespace ImageEdgeDetection
         public IBitmapFilter[] GetEdgeFilters()
         {
             return new IBitmapFilter[] {
-                new NoopFilter("None"),
+                noopFilter,
                 new MatrixEdgeFilter("Sobel 3x3", MatrixEdgeFilter.MATRIX_SOBEL_3X3_HORIZONTAL, MatrixEdgeFilter.MATRIX_SOBEL_3X3_VERTICAL, false),
                 new MatrixEdgeFilter("Sobel 3x3 (grayscale)", MatrixEdgeFilter.MATRIX_SOBEL_3X3_HORIZONTAL, MatrixEdgeFilter.MATRIX_SOBEL_3X3_VERTICAL, true),
                 new MatrixEdgeFilter("Laplacian 3x3", MatrixEdgeFilter.MATRIX_LAPLACIAN_3X3, false, 1.0, 0),
@@ -119,9 +116,10 @@ namespace ImageEdgeDetection
             };
         }
 
-        // TODO Apply on preview? on original? on both? call setpreviewbitmap?
-        public void Apply()
+        public void ApplyOnPreview()
         {
+            if (!HasImage()) return;
+
             filteredPreview = ApplyFilters( preview );
 
             view.SetPreviewBitmap( filteredPreview );
@@ -136,7 +134,7 @@ namespace ImageEdgeDetection
 
         public bool HasImage()
         {
-            return (original != null);
+            return (original != null && preview != null);
         }
 
         public bool HasEdgeFilter()
@@ -151,19 +149,15 @@ namespace ImageEdgeDetection
 
         public void SetPixelFilter(IBitmapFilter _pixelFilter)
         {
-            if (!HasImage()) return;
-
             pixelFilter = _pixelFilter ?? noopFilter;
-            Apply();
+            ApplyOnPreview();
             CheckEditorState();
         }
 
         public void SetEdgeFilter(IBitmapFilter _edgeFilter)
         {
-            if (!HasImage()) return;
-
             edgeFilter = _edgeFilter ?? noopFilter;
-            Apply();
+            ApplyOnPreview();
             CheckEditorState();
         }
 
@@ -177,6 +171,7 @@ namespace ImageEdgeDetection
             {
                 status = BitmapEditorStatus.WARNING;
                 message = "No image chosen";
+                controlsEnabled = false;
             }
 
             else
