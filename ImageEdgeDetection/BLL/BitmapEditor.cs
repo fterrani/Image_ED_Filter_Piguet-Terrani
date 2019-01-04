@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class BitmapEditor : IBitmapEditor
+    public class BitmapEditor : IBitmapEditor
     {
         private IBitmapViewer view;
         private IBitmapFileIO bitmapIO;

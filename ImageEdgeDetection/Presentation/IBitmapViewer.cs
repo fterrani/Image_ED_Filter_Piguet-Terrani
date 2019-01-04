@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    interface IBitmapViewer
+    public interface IBitmapViewer
     {
         void SetPreviewBitmap( Bitmap bitmap );
 
