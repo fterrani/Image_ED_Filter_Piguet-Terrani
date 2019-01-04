@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace ImageEdgeDetection
@@ -12,11 +13,7 @@ namespace ImageEdgeDetection
 
         public Bitmap ReadBitmap( string file )
         {
-            // Loading selected image in originalBitmap
-            StreamReader streamReader = new StreamReader(file);
-            Bitmap originalBitmap = (Bitmap)Image.FromStream(streamReader.BaseStream);
-            streamReader.Close();
-            return originalBitmap;
+            return (Bitmap) Bitmap.FromFile(file);
         }
 
         public bool WriteBitmap( Bitmap bitmap, string file )
@@ -45,6 +42,7 @@ namespace ImageEdgeDetection
             }
             catch
             {
+                streamWriter.Close();
                 return false;
             }
         }

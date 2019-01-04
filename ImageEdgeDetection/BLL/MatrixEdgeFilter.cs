@@ -69,7 +69,7 @@ namespace ImageEdgeDetection
             BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
                                      sourceBitmap.Width, sourceBitmap.Height),
                                                        ImageLockMode.ReadOnly,
-                                                 sourceBitmap.PixelFormat);
+                                                 PixelFormat.Format32bppArgb);
 
             byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
 
@@ -104,7 +104,7 @@ namespace ImageEdgeDetection
             BitmapData resultData = resultBitmap.LockBits(new Rectangle(0, 0,
                                      resultBitmap.Width, resultBitmap.Height),
                                                       ImageLockMode.WriteOnly,
-                                                 resultBitmap.PixelFormat);
+                                                 PixelFormat.Format32bppArgb);
 
             Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
             resultBitmap.UnlockBits(resultData);
