@@ -32,5 +32,7 @@ namespace ImageEdgeDetection
         bool HasImage();
         bool HasEdgeFilter();
         bool HasPixelFilter();
+
+        void CheckEditorState();
     }
 }

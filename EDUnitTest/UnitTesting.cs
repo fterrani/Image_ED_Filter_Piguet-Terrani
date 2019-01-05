@@ -6,6 +6,7 @@ using NSubstitute;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ImageEdgeDetection;
 using ImageEDFilter;
+using System.IO;
 
 namespace EDUnitTest
 {
@@ -76,7 +77,7 @@ namespace EDUnitTest
             byte[] aData = GetBitmapBytes(a);
             byte[] bData = GetBitmapBytes(b);
 
-            return AreBytesEqual( aData, bData );
+            return AreBytesEqual(aData, bData);
         }
 
         // Returns TRUE if both byte arrays are the same length and
@@ -144,7 +145,7 @@ namespace EDUnitTest
             catch
             {
                 // The test simply failed if we arrived in the catch
-                Assert.Fail();              
+                Assert.Fail();
             }
         }
 
@@ -181,11 +182,11 @@ namespace EDUnitTest
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
-            
+
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
-            Assert.IsInstanceOfType(editor.GetPixelFilters(), typeof(IBitmapFilter []));
-            Assert.AreNotEqual(0, editor.GetPixelFilters().Length);        
+            Assert.IsInstanceOfType(editor.GetPixelFilters(), typeof(IBitmapFilter[]));
+            Assert.AreNotEqual(0, editor.GetPixelFilters().Length);
         }
 
         [TestMethod()]
@@ -241,6 +242,9 @@ namespace EDUnitTest
             view.Received(1).SetPreviewBitmap(Arg.Any<Bitmap>());
             view.Received(2).SetControlsEnabled(Arg.Any<bool>());
             view.Received(2).SetStatusMessage(Arg.Any<BitmapEditorStatus>(), Arg.Any<string>());
+
+            // If the file path is wrong
+            bitmapFileIO.ReadBitmap(@"C:\invalid\file\path").Returns(x => { throw new FileNotFoundException(); });
         }
 
 
