@@ -225,7 +225,122 @@ namespace EDUnitTest
         }
 
         [TestMethod()]
-        public void BitmapEditor_ReadFile_CorrectReading()
+        public void BitmapEditor_HasPixelFilter_ReturnTrueOrFalse()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            var pixelFilter = Substitute.For<IBitmapFilter>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            Assert.IsFalse(editor.HasPixelFilter());
+
+            editor.SetPixelFilter(pixelFilter);
+            Assert.IsTrue(editor.HasPixelFilter());
+
+            editor.SetPixelFilter(null);
+            Assert.IsFalse(editor.HasPixelFilter());
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_HasEdgeFilter_ReturnTrueOrFalse()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            var edgeFilter = Substitute.For<IBitmapFilter>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            Assert.IsFalse(editor.HasEdgeFilter());
+
+            editor.SetEdgeFilter(edgeFilter);
+            Assert.IsTrue(editor.HasEdgeFilter());
+
+            editor.SetEdgeFilter(null);
+            Assert.IsFalse(editor.HasEdgeFilter());
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_SetPixelFilter_ReturnTrueOrFalse()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            var pixelFilter = Substitute.For<IBitmapFilter>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            editor.SetPixelFilter(pixelFilter);
+            Assert.IsTrue(editor.HasPixelFilter());
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_SetEdgeFilter_ReturnTrueOrFalse()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            var edgeFilter = Substitute.For<IBitmapFilter>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            editor.SetEdgeFilter(edgeFilter);
+            Assert.IsTrue(editor.HasEdgeFilter());
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_GetBitmap_ReturnBitmap()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            Assert.AreSame(editor.GetBitmap(), new Bitmap(100, 100));
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_SetBitmap_CheckBitmapExist()
+        {
+            // TODO receive in order 
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            var ibitmapeditor = Substitute.For < IBitmapEditor>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            try
+            {
+                editor.SetBitmap(new Bitmap(100, 100));
+                Assert.IsTrue(editor.HasImage());
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+
+            Received.InOrder(() =>
+            {
+                ibitmapeditor.ApplyOnPreview();
+                ibitmapeditor.CheckEditorState();
+            });
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_CheckEditorState_VerifyStates()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_ApplyOnPreview_ApplyFilter()
+        {
+            var bitmapFileIO = Substitute.For<IBitmapFileIO>();
+            var view = Substitute.For<IBitmapViewer>();
+            BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+
+            editor.ApplyOnPreview();
+            view.Received().SetPreviewBitmap(Arg.Any<Bitmap>());
+        }
+
+        [TestMethod()]
+        public void BitmapEditor_ReadFile_CorrectAndWrongReading()
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
