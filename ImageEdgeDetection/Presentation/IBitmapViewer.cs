@@ -13,5 +13,7 @@ namespace ImageEdgeDetection
         void SetStatusMessage( BitmapEditorStatus status, string message );
 
         void SetControlsEnabled( bool enabled );
+
+        int GetPreviewSquareSize();
     }
 }

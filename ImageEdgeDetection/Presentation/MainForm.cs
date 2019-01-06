@@ -133,5 +133,18 @@ namespace ImageEDFilter
             cmbEdgeDetection.Enabled = enabled;
             btnSaveNewImage.Enabled = enabled;
         }
+
+        public int GetPreviewSquareSize()
+        {
+            if (picPreview != null)
+            {
+                return Math.Min(
+                    picPreview.Size.Width,
+                    picPreview.Size.Height
+                );
+            }
+
+            else return 400;
+        }
     }
 }

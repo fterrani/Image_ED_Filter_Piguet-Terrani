@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    abstract class PixelFilter : IBitmapFilter
+    public abstract class PixelFilter : IBitmapFilter
     {
         public string Name { get; set; }
 

@@ -13,7 +13,7 @@ namespace ImageEdgeDetection
 
         public Bitmap ReadBitmap( string file )
         {
-            return (Bitmap) Bitmap.FromFile(file);
+            return (Bitmap) Image.FromFile(file);
         }
 
         public bool WriteBitmap( Bitmap bitmap, string file )
@@ -33,6 +33,7 @@ namespace ImageEdgeDetection
             // Saving the result image in a file
             StreamWriter streamWriter = new StreamWriter(file, false);
 
+            // TODO Let this method return an exception and put a try/catch in the BitmapEditor
             try
             {
                 bitmap.Save(streamWriter.BaseStream, imgFormat);

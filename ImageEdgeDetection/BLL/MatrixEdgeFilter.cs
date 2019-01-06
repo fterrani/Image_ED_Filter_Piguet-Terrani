@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class MatrixEdgeFilter : EdgeFilter
+    public class MatrixEdgeFilter : EdgeFilter
     {
         // Fields used for simple convolution
         private double[,] matrix = null;

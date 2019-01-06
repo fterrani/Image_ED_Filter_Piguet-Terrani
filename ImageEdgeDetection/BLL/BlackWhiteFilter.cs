@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class BlackWhiteFilter : PixelFilter
+    public class BlackWhiteFilter : PixelFilter
     {
         public BlackWhiteFilter(string name) : base(name)
         {

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class ThresoldFilter : PixelFilter
+    public class ThresoldFilter : PixelFilter
     {
         private float min;
         private float max;
