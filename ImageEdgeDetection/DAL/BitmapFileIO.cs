@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace ImageEdgeDetection
 {
-    class BitmapFileIO : IBitmapFileIO
+    public class BitmapFileIO : IBitmapFileIO
     {
         public BitmapFileIO()
         { }

@@ -7,7 +7,7 @@ using System.Text;
 namespace ImageEDFilter
 {
     // This class defines a filter consisting in a set of filters applied sequentially
-    class FilterChain : IBitmapFilter
+    public class FilterChain : IBitmapFilter
     {
         private string name = null;
         private List<IBitmapFilter> filters = new List<IBitmapFilter>();

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
-    class NoopFilter : IBitmapFilter
+    public class NoopFilter : IBitmapFilter
     {
         public string Name { get; set; }
 

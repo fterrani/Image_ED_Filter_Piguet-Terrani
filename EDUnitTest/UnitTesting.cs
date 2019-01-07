@@ -172,12 +172,21 @@ namespace EDUnitTest
             //bitmapFileIO.ReadBitmap(Arg.Any<string>()).Returns(bmp);
             //editor.ReadFile("");
             editor.SetBitmap(bmp);
+
+            filterPx.Received(0).Apply(Arg.Any<Bitmap>());
+            filterEd.Received(0).Apply(Arg.Any<Bitmap>());
+            filterPx.ClearReceivedCalls();
+
             editor.SetPixelFilter(filterPx);
 
-            filterPx.Received().Apply(Arg.Any<Bitmap>());
+            filterPx.Received(1).Apply(Arg.Any<Bitmap>());
+            filterEd.Received(0).Apply(Arg.Any<Bitmap>());
+            filterPx.ClearReceivedCalls();
 
+            editor.SetEdgeFilter(filterEd);
 
-            //editor.SetEdgeFilter(filter);
+            filterPx.Received(1).Apply(Arg.Any<Bitmap>());
+            filterEd.Received(1).Apply(Arg.Any<Bitmap>());
         }
 
 
@@ -329,11 +338,31 @@ namespace EDUnitTest
         [TestMethod()]
         public void BitmapEditor_CheckEditorState_VerifyStates()
         {
+            bool controlsEnabled = true;
+            BitmapEditorStatus status = BitmapEditorStatus.OK;
+
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+
+            view.SetControlsEnabled(Arg.Do<bool>(b => controlsEnabled = b));
+            view.SetStatusMessage(Arg.Do<BitmapEditorStatus>(s => status = s), Arg.Any<string>() );
+
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
+            Assert.IsFalse(controlsEnabled);
+            Assert.AreEqual(BitmapEditorStatus.WARNING, status);
 
+            editor.ReadFile("");
+
+            // asserts
+
+            editor.SetPixelFilter( null );
+
+            // asserts
+
+            editor.SetEdgeFilter(null);
+
+            // asserts
         }
 
         [TestMethod()]
