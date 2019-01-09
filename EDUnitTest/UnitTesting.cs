@@ -290,6 +290,8 @@ namespace EDUnitTest
             var pixelFilter = Substitute.For<IBitmapFilter>();
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
+            Assert.IsFalse(editor.HasPixelFilter());
+
             editor.SetPixelFilter(pixelFilter);
             Assert.IsTrue(editor.HasPixelFilter());
         }
@@ -356,6 +358,12 @@ namespace EDUnitTest
 
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+            var filterEd = Substitute.For<IBitmapFilter>();
+            var filterPx = Substitute.For<IBitmapFilter>();
+
+            // Tell Apply method to return a Bitmap instead of null
+            filterEd.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100,100));
+            filterPx.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100, 100));
 
             view.SetControlsEnabled(Arg.Do<bool>(b => controlsEnabled = b));
             view.SetStatusMessage(Arg.Do<BitmapEditorStatus>(s => status = s), Arg.Any<string>() );
@@ -365,17 +373,23 @@ namespace EDUnitTest
             Assert.IsFalse(controlsEnabled);
             Assert.AreEqual(BitmapEditorStatus.WARNING, status);
 
-            editor.ReadFile("");
+            editor.SetBitmap(new Bitmap(100,100));
 
             // asserts
+            Assert.IsTrue(controlsEnabled);
+            Assert.AreEqual(BitmapEditorStatus.WARNING, status);
 
-            editor.SetPixelFilter( null );
-
-            // asserts
-
-            editor.SetEdgeFilter(null);
+            editor.SetPixelFilter(filterPx);
 
             // asserts
+            Assert.IsTrue(controlsEnabled);
+            Assert.AreEqual(BitmapEditorStatus.WARNING, status);
+
+            editor.SetEdgeFilter(filterEd);
+
+            // asserts
+            Assert.IsTrue(controlsEnabled);
+            Assert.AreEqual(BitmapEditorStatus.OK, status);
         }
 
         [TestMethod()]

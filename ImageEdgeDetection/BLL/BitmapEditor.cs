@@ -159,7 +159,7 @@ namespace ImageEdgeDetection
         {
             BitmapEditorStatus status = BitmapEditorStatus.OK;
             string message = "";
-            bool controlsEnabled = false;
+            bool controlsEnabled = true;
 
             if (!HasImage())
             {
