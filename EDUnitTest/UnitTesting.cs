@@ -361,6 +361,8 @@ namespace EDUnitTest
             var filterEd = Substitute.For<IBitmapFilter>();
             var filterPx = Substitute.For<IBitmapFilter>();
 
+            view.GetPreviewSquareSize().Returns(50);
+
             // Tell Apply method to return a Bitmap instead of null
             filterEd.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100,100));
             filterPx.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100, 100));
