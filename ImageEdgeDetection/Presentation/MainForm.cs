@@ -83,8 +83,14 @@ namespace ImageEDFilter
 
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    editor.WriteFile(sfd.FileName);
-                    MessageBox.Show("Image saved !", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (editor.WriteFile(sfd.FileName))
+                    {
+                        MessageBox.Show("Image saved !", "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot save !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
