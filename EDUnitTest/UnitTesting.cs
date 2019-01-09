@@ -163,30 +163,39 @@ namespace EDUnitTest
             var filterEd = Substitute.For<IBitmapFilter>();
             var filterPx = Substitute.For<IBitmapFilter>();
 
+            view.GetPreviewSquareSize().Returns(50);
+            filterEd.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100, 100));
+            filterPx.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(100, 100));
+
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
             // Received vérifie que les arguments passés à la fonction sont les bons (valeur exacte, type demandé, ...)
             // Returns vérifie 
 
             Bitmap bmp = new Bitmap(100, 100);
-            //bitmapFileIO.ReadBitmap(Arg.Any<string>()).Returns(bmp);
-            //editor.ReadFile("");
             editor.SetBitmap(bmp);
 
             filterPx.Received(0).Apply(Arg.Any<Bitmap>());
             filterEd.Received(0).Apply(Arg.Any<Bitmap>());
             filterPx.ClearReceivedCalls();
+            filterEd.ClearReceivedCalls();
 
             editor.SetPixelFilter(filterPx);
 
             filterPx.Received(1).Apply(Arg.Any<Bitmap>());
             filterEd.Received(0).Apply(Arg.Any<Bitmap>());
             filterPx.ClearReceivedCalls();
+            filterEd.ClearReceivedCalls();
 
             editor.SetEdgeFilter(filterEd);
 
             filterPx.Received(1).Apply(Arg.Any<Bitmap>());
             filterEd.Received(1).Apply(Arg.Any<Bitmap>());
+
+            Received.InOrder(() => {
+                filterPx.Apply(Arg.Any<Bitmap>());
+                filterEd.Apply(Arg.Any<Bitmap>());
+            });
         }
 
 
@@ -220,6 +229,7 @@ namespace EDUnitTest
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns(50);
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
             Assert.IsFalse(editor.HasImage());
@@ -301,6 +311,7 @@ namespace EDUnitTest
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns(50);
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
             editor.SetBitmap(new Bitmap(100, 100));
             Assert.IsInstanceOfType(editor.GetBitmap(), typeof(Bitmap));
@@ -312,27 +323,29 @@ namespace EDUnitTest
             // TODO receive in order 
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
-            var ibitmapeditor = Substitute.For < IBitmapEditor>();
+            view.GetPreviewSquareSize().Returns(50);
+
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
 
             try
             {
                 editor.SetBitmap(new Bitmap(100, 100));
                 Assert.IsTrue(editor.HasImage());
-                /*
-                Received.InOrder(() =>
-                {
-                    ibitmapeditor.ApplyOnPreview();
-                    ibitmapeditor.CheckEditorState();
-                });
-                */
             }
-            catch
+
+            catch (Exception e)
             {
                 Assert.Fail();
             }
-
             
+            Received.InOrder(() =>
+            {
+                view.SetControlsEnabled(false);
+                view.SetStatusMessage(BitmapEditorStatus.WARNING, Arg.Any<string>());
+                view.SetPreviewBitmap(Arg.Any<Bitmap>());
+                view.SetControlsEnabled(true);
+                view.SetStatusMessage(BitmapEditorStatus.WARNING, Arg.Any<string>());
+            });
         }
 
         [TestMethod()]
@@ -370,6 +383,7 @@ namespace EDUnitTest
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns(50);
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
             editor.SetBitmap(new Bitmap(100,100));
             editor.ApplyOnPreview();
@@ -381,6 +395,7 @@ namespace EDUnitTest
         {
             var bitmapFileIO = Substitute.For<IBitmapFileIO>();
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns(50);
 
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
             view.Received(1).SetControlsEnabled(Arg.Any<bool>());
@@ -435,6 +450,7 @@ namespace EDUnitTest
             bitmapFileIO.ReadBitmap(Arg.Any<string>()).Returns(original);
 
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns( squareSide );
             view.SetPreviewBitmap(Arg.Do<Bitmap>(b => preview = b));
 
             var editor = new BitmapEditor(bitmapFileIO, view);
@@ -470,6 +486,7 @@ namespace EDUnitTest
             bitmapFileIO.ReadBitmap(Arg.Any<string>()).Returns(original);
 
             var view = Substitute.For<IBitmapViewer>();
+            view.GetPreviewSquareSize().Returns(squareSide);
             view.SetPreviewBitmap(Arg.Do<Bitmap>(b => preview = b));
 
             var editor = new BitmapEditor(bitmapFileIO, view);
@@ -505,8 +522,8 @@ namespace EDUnitTest
             bitmapFileIO.ReadBitmap(Arg.Any<string>()).Returns(original);
 
             var view = Substitute.For<IBitmapViewer>();
-            view.SetPreviewBitmap(Arg.Do<Bitmap>(b => preview = b));
             view.GetPreviewSquareSize().Returns(squareSide);
+            view.SetPreviewBitmap(Arg.Do<Bitmap>(b => preview = b));
 
             var editor = new BitmapEditor(bitmapFileIO, view);
             editor.ReadFile(@"C:\valid\file\path");
@@ -789,7 +806,7 @@ namespace EDUnitTest
             Bitmap expected = new Bitmap(3, 3);
             SetBitmapBytes(expected, expectedBytes);
 
-            MatrixEdgeFilter mef = new MatrixEdgeFilter("", noopMatrix, false, 1.0, 0);
+            MatrixEdgeFilter mef = new MatrixEdgeFilter("", noopMatrix, true, 1.0, 0);
             Bitmap actual = mef.Apply(original);
 
             Assert.IsTrue(AreBitmapEquals(expected, actual));
@@ -799,7 +816,7 @@ namespace EDUnitTest
         [TestMethod]
         public void ImageFilters_ApplyFilterMega_ColorCheck()
         {
-            Color filterColor = Color.FromArgb(19, 29, 37);
+            Color filterColor = Color.FromArgb(83, 191, 113);
 
             float min = 0.35f;
             float max = 0.65f;

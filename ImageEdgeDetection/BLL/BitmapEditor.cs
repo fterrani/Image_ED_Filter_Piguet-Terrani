@@ -37,7 +37,7 @@ namespace ImageEdgeDetection
         public void SetBitmap( Bitmap bitmap )
         {
             original = bitmap ?? throw new ArgumentNullException();
-            preview = CreatePreview( original, 400 );
+            preview = CreatePreview( original, view.GetPreviewSquareSize() );
             ApplyOnPreview();
 
             CheckEditorState();
