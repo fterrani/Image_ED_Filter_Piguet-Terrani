@@ -51,7 +51,6 @@
     <Compile Include="DAL\BitmapFileIO.cs" />
     <Compile Include="BLL\ThresoldFilter.cs" />
     <Compile Include="BLL\BlackWhiteFilter.cs" />
-    <Compile Include="BLL\FilterChain.cs" />
     <Compile Include="BLL\IBitmapEditor.cs" />
     <Compile Include="DAL\IBitmapFileIO.cs" />
     <Compile Include="BLL\IBitmapFilter.cs" />
@@ -62,7 +61,6 @@
     <Compile Include="Presentation\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BLL\Matrix.cs" />
     <Compile Include="BLL\MatrixEdgeFilter.cs" />
     <Compile Include="BLL\NoopFilter.cs" />
     <Compile Include="BLL\EdgeFilter.cs" />

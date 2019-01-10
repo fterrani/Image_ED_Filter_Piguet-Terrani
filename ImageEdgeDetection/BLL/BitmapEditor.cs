@@ -31,7 +31,10 @@ namespace ImageEdgeDetection
 
         public Bitmap GetBitmap()
         {
-            return ApplyFilters( original );
+            if (original == null)
+                return original;
+            else
+                return ApplyFilters( original );
         }
 
         public void SetBitmap( Bitmap bitmap )
@@ -102,10 +105,10 @@ namespace ImageEdgeDetection
         {
             return new IBitmapFilter[] {
                 new NoopFilter("None"),
-                new MatrixEdgeFilter("Sobel 3x3", MatrixEdgeFilter.MATRIX_SOBEL_3X3_HORIZONTAL, MatrixEdgeFilter.MATRIX_SOBEL_3X3_VERTICAL, false),
-                new MatrixEdgeFilter("Sobel 3x3 (grayscale)", MatrixEdgeFilter.MATRIX_SOBEL_3X3_HORIZONTAL, MatrixEdgeFilter.MATRIX_SOBEL_3X3_VERTICAL, true),
                 new MatrixEdgeFilter("Laplacian 3x3", MatrixEdgeFilter.MATRIX_LAPLACIAN_3X3, false, 1.0, 0),
-                new MatrixEdgeFilter("Laplacian 3x3 (grayscale)", MatrixEdgeFilter.MATRIX_LAPLACIAN_3X3, true, 1.0, 0)
+                new MatrixEdgeFilter("Laplacian 3x3 (grayscale)", MatrixEdgeFilter.MATRIX_LAPLACIAN_3X3, true, 1.0, 0),
+                new MatrixEdgeFilter("Laplacian 5x5", MatrixEdgeFilter.MATRIX_LAPLACIAN_5X5, false, 1.0, 0),
+                new MatrixEdgeFilter("Laplacian 5x5 (grayscale)", MatrixEdgeFilter.MATRIX_LAPLACIAN_5X5, true, 1.0, 0)
             };
         }
 
@@ -120,9 +123,6 @@ namespace ImageEdgeDetection
 
         private Bitmap ApplyFilters( Bitmap bmp )
         {
-            //FilterChain fc = new FilterChain(new IBitmapFilter[] { pixelFilter, edgeFilter });
-            //return fc.Apply(bmp);
-
             return edgeFilter.Apply(pixelFilter.Apply(bmp));
         }
 
@@ -133,12 +133,12 @@ namespace ImageEdgeDetection
 
         public bool HasEdgeFilter()
         {
-            return (edgeFilter != null && !(edgeFilter is NoopFilter) );
+            return !(edgeFilter is NoopFilter);
         }
 
         public bool HasPixelFilter()
         {
-            return (pixelFilter != null && !(pixelFilter is NoopFilter) );
+            return !(pixelFilter is NoopFilter);
         }
 
         public void SetPixelFilter(IBitmapFilter _pixelFilter)

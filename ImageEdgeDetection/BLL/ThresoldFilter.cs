@@ -8,6 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // This filter colors the pixels of a bitmap in white or in a custom color depending on the pixel's perceived luminance value
     public class ThresoldFilter : PixelFilter
     {
         private float min;

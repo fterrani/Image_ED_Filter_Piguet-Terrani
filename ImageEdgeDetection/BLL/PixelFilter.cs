@@ -7,6 +7,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // This abstract class is used to explicitly classify IBitmapFilter classes as pixel filters
     public abstract class PixelFilter : IBitmapFilter
     {
         public string Name { get; set; }

@@ -15,10 +15,6 @@ namespace ImageEdgeDetection
         private double factor = 1.0;
         private int bias = 0;
 
-        // Fields used for XY convolution
-        private double[,] xMatrix = null;
-        private double[,] yMatrix = null;
-
         // Boolean for conversion to grayscale (perceived luminance)
         private bool grayscale = false;
 
@@ -39,21 +35,6 @@ namespace ImageEdgeDetection
             }
 
             convolutionFunc = simpleConvFunc;
-        }
-
-        public MatrixEdgeFilter(string name, double[,] _xMatrix, double[,] _yMatrix, bool _grayscale) : base(name)
-        {
-            xMatrix = _xMatrix ?? throw new ArgumentNullException("_xMatrix");
-            yMatrix = _yMatrix ?? throw new ArgumentNullException("_yMatrix");
-            grayscale = _grayscale;
-
-            byte[] xyConvFunc(byte[] pixelBuffer, int width, int height, int stride)
-            {
-                // We apply only one matrix on the buffer
-                return XYConvolution( pixelBuffer, width, height, stride, xMatrix, yMatrix );
-            }
-
-            convolutionFunc = xyConvFunc;
         }
 
         public override Bitmap Apply(Bitmap bmp)
@@ -179,97 +160,18 @@ namespace ImageEdgeDetection
             return resultBuffer;
         }
 
-        // Applies two matrices on pixelBuffer (one for X, the other for Y)
-        private byte[] XYConvolution(byte[] pixelBuffer, int width, int height, int stride, double[,] xFilterMatrix, double[,] yFilterMatrix)
-        {
-            byte[] resultBuffer = new byte[pixelBuffer.Length];
-
-            double blueX = 0.0;
-            double greenX = 0.0;
-            double redX = 0.0;
-
-            double blueY = 0.0;
-            double greenY = 0.0;
-            double redY = 0.0;
-
-            double blueTotal = 0.0;
-            double greenTotal = 0.0;
-            double redTotal = 0.0;
-
-            int filterOffset = 1;
-            int calcOffset = 0;
-
-            int byteOffset = 0;
-
-            for (int offsetY = filterOffset; offsetY < height - filterOffset; offsetY++)
-            {
-                for (int offsetX = filterOffset; offsetX < width - filterOffset; offsetX++)
-                {
-                    blueX = greenX = redX = 0;
-                    blueY = greenY = redY = 0;
-
-                    blueTotal = greenTotal = redTotal = 0.0;
-
-                    byteOffset = offsetY *
-                                 stride +
-                                 offsetX * 4;
-
-                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
-                    {
-                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
-                        {
-                            calcOffset = byteOffset +
-                                         (filterX * 4) +
-                                         (filterY * stride);
-
-                            blueX += (double)(pixelBuffer[calcOffset]) * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-                            greenX += (double)(pixelBuffer[calcOffset + 1]) * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-                            redX += (double)(pixelBuffer[calcOffset + 2]) * xFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-
-                            blueY += (double)(pixelBuffer[calcOffset]) * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-                            greenY += (double)(pixelBuffer[calcOffset + 1]) * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-                            redY += (double)(pixelBuffer[calcOffset + 2]) * yFilterMatrix[filterY + filterOffset, filterX + filterOffset];
-                        }
-                    }
-
-                    blueTotal = Math.Sqrt((blueX * blueX) + (blueY * blueY));
-                    greenTotal = Math.Sqrt((greenX * greenX) + (greenY * greenY));
-                    redTotal = Math.Sqrt((redX * redX) + (redY * redY));
-
-                    // Clamping blue, green and red between 0 and 255
-                    // (according to the documentation, Math.sqrt() cannot return a negative value;
-                    // this function can return only >= 0 values, NaN or PositiveInfinity)
-                    if (blueTotal > 255) blueTotal = 255;
-                    if (greenTotal > 255) greenTotal = 255;
-                    if (redTotal > 255) redTotal = 255;
-                    
-
-                    resultBuffer[byteOffset + 0] = (byte)(blueTotal);
-                    resultBuffer[byteOffset + 1] = (byte)(greenTotal);
-                    resultBuffer[byteOffset + 2] = (byte)(redTotal);
-                    resultBuffer[byteOffset + 3] = 255;
-                }
-            }
-
-            return resultBuffer;
-        }
-
         public static readonly double[,] MATRIX_LAPLACIAN_3X3 = new double[,] {
             { -1, -1, -1, },
             { -1,  8, -1, },
             { -1, -1, -1, }
         };
 
-        public static readonly double[,] MATRIX_SOBEL_3X3_HORIZONTAL = new double[,] {
-            { -1,  0,  1, },
-            { -2,  0,  2, },
-            { -1,  0,  1, }
-        };
-
-        public static readonly double[,] MATRIX_SOBEL_3X3_VERTICAL = new double[,] {
-            {  1,  2,  1, },
-            {  0,  0,  0, },
-            { -1, -2, -1, }
+        public static readonly double[,] MATRIX_LAPLACIAN_5X5 = new double[,] {
+            { -1, -1, -1, -1, -1, },
+            { -1, -1, -1, -1, -1, },
+            { -1, -1, 24, -1, -1, },
+            { -1, -1, -1, -1, -1, },
+            { -1, -1, -1, -1, -1 }
         };
     }
 }

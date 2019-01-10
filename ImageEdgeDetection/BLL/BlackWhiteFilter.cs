@@ -8,6 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // Converts a Bitmap's color to grayscale by computing the average of all color channels
     public class BlackWhiteFilter : PixelFilter
     {
         public BlackWhiteFilter(string name) : base(name)

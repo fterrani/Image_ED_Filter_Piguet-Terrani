@@ -8,6 +8,8 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // This class defines a IBitmapFilter that doesn't do anything. It can be used to apply a null object design pattern.
+    // Note that this filter still clones the bitmap to stay coherent with other filters that actually do something and return a different bitmap instance.
     public class NoopFilter : IBitmapFilter
     {
         public string Name { get; set; }
