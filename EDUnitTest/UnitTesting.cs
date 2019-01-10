@@ -495,7 +495,7 @@ namespace EDUnitTest
         public void BitmapEditor_CheckEditorState_VerifyStates()
         {
             // Two things are tested: the controls activation and the editor's status
-            // (messages are not tested but they could be by storing them in variables)
+            // (messages are not tested but they could be by putting them in public variables that could be compared)
             bool controlsEnabled = true;
             BitmapEditorStatus status = BitmapEditorStatus.OK;
 
