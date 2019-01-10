@@ -8,45 +8,57 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // A bitmap editor that implements the IBitmapEditor interface
     public class BitmapEditor : IBitmapEditor
     {
+        // The view will display the editor's data
         private IBitmapViewer view;
+
+        // The bitmapIO will read and write bitmap files
         private IBitmapFileIO bitmapIO;
 
+        // By default, pixel and edge filters are set to a NoopFilter
         private IBitmapFilter pixelFilter = new NoopFilter("");
         private IBitmapFilter edgeFilter = new NoopFilter("");
 
-
+        // Original, preview and filtered preview bitmaps
         private Bitmap original = null;
         private Bitmap preview = null;
         private Bitmap filteredPreview = null;
 
+        // We build the editor with a bitmapIO and a view
         public BitmapEditor( IBitmapFileIO _bitmapIO, IBitmapViewer _view )
         {
             bitmapIO = _bitmapIO ?? throw new ArgumentNullException();
             view = _view ?? throw new ArgumentNullException();
 
+            // Updating the view
             CheckEditorState();
         }
 
+        // Returns the original bitmap with filters applied on it
         public Bitmap GetBitmap()
         {
-            if (original == null)
-                return original;
-            else
-                return ApplyFilters( original );
+            return ApplyFilters( original );
         }
 
+        // Puts a new bitmap in the editor
         public void SetBitmap( Bitmap bitmap )
         {
             original = bitmap ?? throw new ArgumentNullException();
+
+            // Creates a new preview
             preview = CreatePreview( original, view.GetPreviewSquareSize() );
+
+            // Applies filters on the preview
             ApplyOnPreview();
 
+            // Updates the view
             CheckEditorState();
         }
 
-        // Copies sourceBitmap to a new Bitmap object (the image is resized; proportions are preserved)
+        // Returns a preview of _original Bitmap fitting in a square of length previewSize
+        // (the image is resized; proportions are preserved)
         private Bitmap CreatePreview(Bitmap _original, int previewSize)
         {
             float ratio = 1.0f;
@@ -77,6 +89,7 @@ namespace ImageEdgeDetection
             return _preview;
         }
 
+        // Reads the Bitmap file located at srcFile
         public void ReadFile(string srcFile)
         {
             Bitmap bmpFile = bitmapIO.ReadBitmap( srcFile );
@@ -84,6 +97,7 @@ namespace ImageEdgeDetection
             SetBitmap(bmpFile);
         }
 
+        // Applies the filters to the original Bitmap and saves the result to destFile
         public bool WriteFile(string destFile)
         {
             Bitmap filteredOriginal = ApplyFilters( original );
@@ -91,6 +105,7 @@ namespace ImageEdgeDetection
             return bitmapIO.WriteBitmap(filteredOriginal, destFile);
         }
 
+        // Returns a set of usable pre-configured pixel filters
         public IBitmapFilter[] GetPixelFilters()
         {
             return new IBitmapFilter[] {
@@ -100,7 +115,7 @@ namespace ImageEdgeDetection
             };
         }
 
-
+        // Returns a set of usable pre-configured edge filters
         public IBitmapFilter[] GetEdgeFilters()
         {
             return new IBitmapFilter[] {
@@ -112,6 +127,7 @@ namespace ImageEdgeDetection
             };
         }
 
+        // Applies the currently selected filters on the preview and sends the preview to the view
         public void ApplyOnPreview()
         {
             if (!HasImage()) return;
@@ -121,26 +137,34 @@ namespace ImageEdgeDetection
             view.SetPreviewBitmap( filteredPreview );
         }
 
+        // Applies the currently selected filters on Bitmap bmp
         private Bitmap ApplyFilters( Bitmap bmp )
         {
-            return edgeFilter.Apply(pixelFilter.Apply(bmp));
+            if (bmp == null)
+                return null;
+            else
+                return edgeFilter.Apply(pixelFilter.Apply(bmp));
         }
 
+        // Returns TRUE if the editor contains a bitmap, FALSE otherwise
         public bool HasImage()
         {
             return (original != null && preview != null);
         }
 
+        // Returns TRUE if the editor has an edge filter selected, FALSE otherwise
         public bool HasEdgeFilter()
         {
             return !(edgeFilter is NoopFilter);
         }
 
+        // Returns TRUE if the editor has an pixel filter selected, FALSE otherwise
         public bool HasPixelFilter()
         {
             return !(pixelFilter is NoopFilter);
         }
 
+        // Selects a new pixel filter
         public void SetPixelFilter(IBitmapFilter _pixelFilter)
         {
             pixelFilter = _pixelFilter ?? new NoopFilter("");
@@ -148,6 +172,7 @@ namespace ImageEdgeDetection
             CheckEditorState();
         }
 
+        // Selects a new edge filter
         public void SetEdgeFilter(IBitmapFilter _edgeFilter)
         {
             edgeFilter = _edgeFilter ?? new NoopFilter("");
@@ -155,6 +180,7 @@ namespace ImageEdgeDetection
             CheckEditorState();
         }
 
+        // Checks the editor's current state and transfers data to the view (controls activation, status and message)
         public void CheckEditorState()
         {
             BitmapEditorStatus status = BitmapEditorStatus.OK;
@@ -163,6 +189,7 @@ namespace ImageEdgeDetection
 
             if (!HasImage())
             {
+                // No image was chosen
                 status = BitmapEditorStatus.WARNING;
                 message = "No image chosen";
                 controlsEnabled = false;
@@ -170,11 +197,13 @@ namespace ImageEdgeDetection
 
             else
             {
+                // If we have an image,controls are enabled
                 controlsEnabled = true;
 
                 bool hasPixelFilter = HasPixelFilter();
                 bool hasEdgeFilter = HasEdgeFilter();
 
+                // Warning if no filter was selected
                 if (!hasPixelFilter && !hasEdgeFilter)
                 {
                     status = BitmapEditorStatus.WARNING;
@@ -185,18 +214,21 @@ namespace ImageEdgeDetection
                 {
                     if (!hasEdgeFilter)
                     {
+                        // Warning if no edge detection filter was applied
                         status = BitmapEditorStatus.WARNING;
                         message = "No edge detection\nfilter applied";
                     }
 
                     else
                     {
+                        // OK status confirming everything needed was configured/set
                         status = BitmapEditorStatus.OK;
                         message = "Edge detection\napplied. Ready to save.";
                     }
                 }
             }
 
+            // Updating the view
             view.SetControlsEnabled( controlsEnabled );
             view.SetStatusMessage( status, message );
         }

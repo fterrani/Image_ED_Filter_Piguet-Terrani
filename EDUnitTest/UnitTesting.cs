@@ -347,8 +347,18 @@ namespace EDUnitTest
             var view = Substitute.For<IBitmapViewer>();
             var pixelFilter = Substitute.For<IBitmapFilter>();
 
-            // Creating the editor
+            // The view should return a preview square size to make the editor behave properly
+            view.GetPreviewSquareSize().Returns(50);
+
+            // We make the filter return something to avoid triggering an exception
+            pixelFilter.Apply(Arg.Any<Bitmap>()).Returns( new Bitmap(50, 50));
+
+            // Creating the editor and setting a bitmap
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+            editor.SetBitmap( new Bitmap(100, 100) );
+
+            // Clearing calls to the filter
+            pixelFilter.ClearReceivedCalls();
 
             // Setting the pixel filter
             editor.SetPixelFilter(pixelFilter);
@@ -367,8 +377,18 @@ namespace EDUnitTest
             var view = Substitute.For<IBitmapViewer>();
             var edgeFilter = Substitute.For<IBitmapFilter>();
 
-            // Creating the editor
+            // The view should return a preview square size to make the editor behave properly
+            view.GetPreviewSquareSize().Returns(50);
+
+            // We make the filter return something to avoid triggering an exception
+            edgeFilter.Apply(Arg.Any<Bitmap>()).Returns(new Bitmap(50, 50));
+
+            // Creating the editor and setting a bitmap
             BitmapEditor editor = new BitmapEditor(bitmapFileIO, view);
+            editor.SetBitmap(new Bitmap(100, 100));
+
+            // Clearing calls to the filter
+            edgeFilter.ClearReceivedCalls();
 
             // Setting the edge filter
             editor.SetEdgeFilter(edgeFilter);

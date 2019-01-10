@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // This interface defines a class able to read Bitmap from files and write Bitmap to files
     public interface IBitmapFileIO
     {
         // Return a bitmap from a given path

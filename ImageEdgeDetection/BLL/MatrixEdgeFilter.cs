@@ -8,6 +8,7 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // A class able to perform single matrix convolutions on a Bitmap instance
     public class MatrixEdgeFilter : EdgeFilter
     {
         // Fields used for simple convolution
@@ -37,6 +38,7 @@ namespace ImageEdgeDetection
             convolutionFunc = simpleConvFunc;
         }
 
+        // Applies the MatrixEdgeFilter on bmp and returns the result
         public override Bitmap Apply(Bitmap bmp)
         {
             
@@ -93,7 +95,7 @@ namespace ImageEdgeDetection
             return resultBitmap;
         }
 
-        // Applies a single matrix on pixelBuffer
+        // Applies a single matrix convolution on pixelBuffer
         private byte[] SimpleConvolution(byte[] pixelBuffer, int width, int height, int stride, double[,] filterMatrix, double factor = 1, int bias = 0)
         {
             byte[] resultBuffer = new byte[pixelBuffer.Length];
@@ -136,6 +138,7 @@ namespace ImageEdgeDetection
                         }
                     }
 
+                    // Applying factor and bias
                     blue = factor * blue + bias;
                     green = factor * green + bias;
                     red = factor * red + bias;
@@ -150,6 +153,7 @@ namespace ImageEdgeDetection
                     if (red > 255) red = 255;
                     else if (red < 0) red = 0;
 
+                    // Writing result to color channels
                     resultBuffer[byteOffset + 0] = (byte)(blue);
                     resultBuffer[byteOffset + 1] = (byte)(green);
                     resultBuffer[byteOffset + 2] = (byte)(red);
@@ -160,6 +164,7 @@ namespace ImageEdgeDetection
             return resultBuffer;
         }
 
+        // Some ready-to-use matrices are available if needed
         public static readonly double[,] MATRIX_LAPLACIAN_3X3 = new double[,] {
             { -1, -1, -1, },
             { -1,  8, -1, },

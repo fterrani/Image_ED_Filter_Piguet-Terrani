@@ -7,32 +7,34 @@ using System.Text;
 
 namespace ImageEdgeDetection
 {
+    // This interface defines a bitmap editor able to apply filters on a Bitmap, show a preview of it and read/save Bitmaps to files
     public interface IBitmapEditor
     {
-        // Getter & setter for bitmap
+        // Getter & setter for the full-sized bitmap
         Bitmap GetBitmap();
         void SetBitmap(Bitmap bitmap);
 
-        // Read & write bitmap from a given path
+        // Read & write bitmap from & to a given path
         void ReadFile(string file);
         bool WriteFile(string file);
 
-        // Apply the filter we want
+        // Applies the filter on the preview and sends it to the view
         void ApplyOnPreview();
 
-        // Get all the pixel and edge filter in arrays
+        // Returns all the pixel and edge filter in arrays
         IBitmapFilter[] GetPixelFilters();
         IBitmapFilter[] GetEdgeFilters();
 
-        // Set the filter to the Bitmap
+        // Set the current filters of the editor to apply on the Bitmap
         void SetPixelFilter(IBitmapFilter pixelFilter);
         void SetEdgeFilter(IBitmapFilter edgeFilter);
 
-        // Booleans that return some states  
+        // Booleans that return information about the editor's state
         bool HasImage();
         bool HasEdgeFilter();
         bool HasPixelFilter();
 
+        // Updates the view
         void CheckEditorState();
     }
 }

@@ -19,6 +19,7 @@ namespace ImageEdgeDetection
             Name = name;
         }
 
+        // The NoopFilter does nothing and simply returns a clone of the source Bitmap
         public Bitmap Apply(Bitmap bmp)
         {
             return bmp.Clone(

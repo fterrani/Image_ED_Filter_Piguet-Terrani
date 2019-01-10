@@ -81,6 +81,7 @@ namespace ImageEDFilter
                 sfd.Filter += "|JPEG Images(*.jpg)|*.jpg";
                 sfd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
 
+                // Displays a confirmation or error message to the user when saving the file
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (editor.WriteFile(sfd.FileName))
@@ -98,20 +99,24 @@ namespace ImageEDFilter
         // The color filter was changed
         private void cmbColorFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Changing the pixel filter of the editor
             editor.SetPixelFilter(cmbColorFilter.SelectedItem as IBitmapFilter);
         }
 
         // The edge detection filter was changed
         private void cmbEdgeDetection_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Changing the edge filter of the editor
             editor.SetEdgeFilter(cmbEdgeDetection.SelectedItem as IBitmapFilter);
         }
 
         public void SetPreviewBitmap(Bitmap bitmap)
         {
+            // Displays the preview in the picPreview component
             picPreview.Image = bitmap;
         }
 
+        // Displays the provided status and message
         public void SetStatusMessage(BitmapEditorStatus status, string message)
         {
             string iconPath = "";
@@ -128,12 +133,16 @@ namespace ImageEDFilter
                 msgColor = COLOR_WARNING;
             }
 
+            // Displaying the icon
             StreamReader streamReader = new StreamReader(iconPath);
             picMessageIcon.Image = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
+
+            // Changing the status text color and content
             lbMessage.ForeColor = msgColor;
             lbMessage.Text = message;
         }
 
+        // Enables or disables controls on the window
         public void SetControlsEnabled(bool enabled)
         {
             cmbColorFilter.Enabled = enabled;
@@ -141,6 +150,7 @@ namespace ImageEDFilter
             btnSaveNewImage.Enabled = enabled;
         }
 
+        // Returns the appropriate and optimal preview size, or the value 400 if the component is not ready yet
         public int GetPreviewSquareSize()
         {
             if (picPreview != null)

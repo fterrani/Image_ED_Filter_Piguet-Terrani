@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ImageEDFilter
 {
-    // This interface defines a BitmapFilter
+    // This interface defines a BitmapFilter that can be applied on a Bitmap object
     public interface IBitmapFilter
     {
         // The name of the filter

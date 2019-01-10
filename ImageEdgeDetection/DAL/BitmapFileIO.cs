@@ -6,26 +6,31 @@ using System.Windows.Forms;
 
 namespace ImageEdgeDetection
 {
+    // This class reads Bitmap instances from files and writes Bitmap instances to files
     public class BitmapFileIO : IBitmapFileIO
     {
         public BitmapFileIO()
         { }
 
+        // Tries reading an image from the provided file path.
+        // Can throw an exception if the file is not found
         public Bitmap ReadBitmap( string file )
         {
             return (Bitmap) Image.FromFile(file);
         }
 
+        // Writes a Bitmap instance to a file, saving in the format deduced from the destination path
+        // Can throw an exception if the file is not found
         public bool WriteBitmap( Bitmap bitmap, string file )
         {
             string fileExtension = Path.GetExtension(file).ToUpper();
             ImageFormat imgFormat = ImageFormat.Png;
 
-            if (fileExtension == "BMP")
+            if (fileExtension == ".BMP")
             {
                 imgFormat = ImageFormat.Bmp;
             }
-            else if (fileExtension == "JPG")
+            else if (fileExtension == ".JPG")
             {
                 imgFormat = ImageFormat.Jpeg;
             }
@@ -33,7 +38,6 @@ namespace ImageEdgeDetection
             // Saving the result image in a file
             StreamWriter streamWriter = new StreamWriter(file, false);
 
-            // TODO Let this method return an exception and put a try/catch in the BitmapEditor
             try
             {
                 bitmap.Save(streamWriter.BaseStream, imgFormat);

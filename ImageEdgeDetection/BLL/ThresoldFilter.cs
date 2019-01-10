@@ -11,8 +11,11 @@ namespace ImageEdgeDetection
     // This filter colors the pixels of a bitmap in white or in a custom color depending on the pixel's perceived luminance value
     public class ThresoldFilter : PixelFilter
     {
+        // Min and max define a luminance interval where pixels will be colored in white
         private float min;
         private float max;
+
+        // If the luminance is not in the defined interval, a custom color is applied
         private Color color;
 
         public ThresoldFilter(string name, float _min, float _max, Color _color) : base(name)
@@ -45,9 +48,10 @@ namespace ImageEdgeDetection
                 luminance += pixelBuffer[k + 1]/255.0f * 0.59f;
                 luminance += pixelBuffer[k + 2]/255.0f * 0.3f;
 
-
+                // If luminance is in range,
                 if (luminance >= min && luminance <= max)
                 {
+                    // we set the pixel to white
                     red = 255;
                     green = 255;
                     blue = 255;
@@ -55,6 +59,7 @@ namespace ImageEdgeDetection
 
                 else
                 {
+                    // otherwise we apply the custom color
                     red = color.R;
                     green = color.G;
                     blue = color.B;
